@@ -1,0 +1,49 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group label-floating">
+                    <label class="control-label">Please enter your question. Use "_" to represent blanks.</label>
+                    <input type="text" class="form-control" id="question">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="form-group label-floating has-success">
+                    <label class="control-label">Please enter the correct answer</label>
+                    <input type="text"  class="form-control" id="answer">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <label class="control-label">Please enter other answers</label>
+                <!-- <p>Please enter other answers</p> -->
+                <tag-input [(ngModel)]='options' theme='filled-theme' [editable]='true'></tag-input>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="form-group label-floating">
+                    <label class="control-label">Target age group</label>
+                    <input  type="number" class="form-control" name="input" [(ngModel)]="age" min="0" max="99" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <button class="btn btn-primary btn-round" (click)="addQuestion();">
+                    <i class="material-icons">add</i> Add new question
+                </button>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="main-content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form method="get" action="/" class="form-horizontal">
+                        <div class="card-header card-header-text" data-background-color="rose">
+                            <h4 class="card-title">搜查問題紀錄</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Search keywords</label>
+                                        <input type="text" class="form-control" id="keyword">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Target age group</label>
+                                        <input type="number" class="form-control" name="input" [(ngModel)]="age" min="0" max="99" required>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                          
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <my-date-range-picker [options]="myDateRangePickerOptions" (dateRangeChanged)="onDateRangeChanged($event)" placeholder="Select a date range"></my-date-range-picker>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <button class="btn btn-sm btn-info no-radius" type="button" (click)="searchHistory()">
+                                        <i class="material-icons">done</i>
+                                        Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="results != null">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-text" data-background-color="rose">
+                        <h4 class="card-title">搜查結果</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div *ngFor="let result of results; let $index = index;">
+                                <div>
+                                    <!-- Question -->
+                                    <h4 class="blue">{{result.Age}}歲{{result.Gender}} | {{result.CreateDateTime}} | Category: {{result.Category}}
+                                        | Topic: {{result.Topic}}</h4>
+                                    <p>{{result.Question}}</p>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="{{ 'heading-' + $index }}">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ 'collapse-' + $index }}" aria-expanded="false"
+                                            [attr.aria-controls]="'collapse-' + $index">
+                                            <h4 class="panel-title">
+                                                更多詳細答案
+                                                <i class="material-icons">keyboard_arrow_down</i>
+                                            </h4>
+                                        </a>
+                                    </div>
+                                    <div id="{{ 'collapse-' + $index }}" class="panel-collapse collapse" role="tabpanel" [attr.aria-labelledby]="'heading-' + $index">
+                                        <div class="panel-body">
+                                            <div *ngFor="let answer of result['Answers']">
+                                                <h4 class="blue">{{answer.DoctorName}}醫生 {{answer.AnswerDateTime}}</h4>
+                                                <p>{{answer.Answer}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+    </div>
+</div>
