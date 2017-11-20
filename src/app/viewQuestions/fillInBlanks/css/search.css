@@ -1,0 +1,27 @@
+.form-horizontal .checkbox-radios .checkbox:first-child, .form-horizontal .checkbox-radios .radio{
+    margin-top: 16px;
+}
+
+.panel-group .panel {
+    margin-bottom: 3em;
+    border-radius: 4px;
+    margin-left: 2em;
+}
+
+.blue{
+    color: #0483bf;
+    font-weight: 400;
+    display: inline;
+}
+
+.green{
+    color: #04bf33;
+}
+
+.red{
+    color: #bf0404;
+}
+
+.right{
+    float: right;
+}

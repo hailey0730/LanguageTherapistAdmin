@@ -121,6 +121,16 @@ export const ROUTES: RouteInfo[] = [{
             // { path: 'grid', title: 'Grid System', ab: 'GS' },
 
         ]
+    }, {
+        path: '/settings',
+        title: 'Settings',
+        type: 'sub',
+        icontype: 'settings',
+        children: [
+            { path: 'accountDetails', title: 'Account details', ab: 'AC' }
+            // { path: 'grid', title: 'Grid System', ab: 'GS' },
+
+        ]
     }
 ];
 @Component({

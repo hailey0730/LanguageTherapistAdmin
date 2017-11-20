@@ -52,16 +52,18 @@
                             <div *ngFor="let result of results; let $index = index;">
                                 <div>
                                     <!-- Question -->
-                                    <h4 class="blue">{{result.Age}}歲{{result.Gender}} | {{result.CreateDateTime}} | Category: {{result.Category}}
-                                        | Topic: {{result.Topic}}</h4>
-                                    <p>{{result.Question}}</p>
+                                    <h4 class="blue" >{{ $index+1 }}</h4>
+                                    <h4 class="blue" >{{result.Question}}</h4>
+                                    <button class="btn btn-sm btn-info no-radius right" type="button" (click)="edit(result)">
+                                        <i class="material-icons">edit</i>
+                                        Edit</button>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading" role="tab" id="{{ 'heading-' + $index }}">
                                         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ 'collapse-' + $index }}" aria-expanded="false"
                                             [attr.aria-controls]="'collapse-' + $index">
                                             <h4 class="panel-title">
-                                                更多詳細答案
+                                                答案選項
                                                 <i class="material-icons">keyboard_arrow_down</i>
                                             </h4>
                                         </a>
@@ -69,7 +71,6 @@
                                     <div id="{{ 'collapse-' + $index }}" class="panel-collapse collapse" role="tabpanel" [attr.aria-labelledby]="'heading-' + $index">
                                         <div class="panel-body">
                                             <div *ngFor="let answer of result['Answers']">
-                                                <h4 class="blue">{{answer.DoctorName}}醫生 {{answer.AnswerDateTime}}</h4>
                                                 <p>{{answer.Answer}}</p>
                                             </div>
                                         </div>

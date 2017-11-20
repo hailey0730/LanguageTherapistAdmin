@@ -1,15 +1,27 @@
 // IMPORTANT: this is a plugin which requires jQuery for initialisation and data manipulation
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+
+import { appService } from '../app.service';
 declare const swal: any;
 declare const $: any;
 
 @Component({
     selector: 'app-calendar-cmp',
-    templateUrl: 'calendar.component.html'
+    templateUrl: 'calendar.component.html',
+    styleUrls: ['./css/calendar.css'],      //doesn't work on modal, need to make it work
+    providers:[
+        appService
+    ]
 })
 
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, AfterViewInit {
+    constructor(private appService: appService) {
+
+    }
+
+    public recurring: boolean = false;
+
     ngOnInit() {
         const $calendar = $('#fullCalendar');
 
@@ -17,6 +29,10 @@ export class CalendarComponent implements OnInit {
         const y = today.getFullYear();
         const m = today.getMonth();
         const d = today.getDate();
+
+        const fiveYearsAfter = y + 5;
+        const fiveYearsBefore = y - 5;
+    
 
         $calendar.fullCalendar({
             viewRender: function(view: any, element: any) {
@@ -51,9 +67,40 @@ export class CalendarComponent implements OnInit {
 
                 // on select we show the Sweet Alert modal with an input
                 swal({
-                    title: 'Create an Event',
+                    title: 'Make an appointment',
                     html: '<div class="form-group">' +
+                    '<div class="row">' +
+                            '<input class="form-control" placeholder="Staff" id="input-field">' +
+                            '</div>' +
+                    '<div class="row">' +
                             '<input class="form-control" placeholder="Event Title" id="input-field">' +
+                    '</div>' +
+                    '<div class="row">' +
+                    '<div class="col-md-6">' +
+                    '<input type="date" name="input" [(ngModel)]="dateFrom" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    '</div>' +
+                    '<div class="col-md-6">' +
+                    '<input type="time" name="input" [(ngModel)]="timeFrom" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="row">' +
+                    '<div class="col-md-6">' +
+                    '<input type="date" name="input" [(ngModel)]="dateTo" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    '</div>' +
+                    '<div class="col-md-6">' +
+                    '<input type="time" name="input" [(ngModel)]="timeTo" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="row">' +
+                    '<input class="form-control" placeholder="Note" id="input-field">' +
+                    '</div>' +
+                    '<div class="row">' +
+                    '<div class="togglebutton">' +
+                    '<label>' +
+                    '<input type="checkbox" required/>' +  'Recurring' +
+                    '</label>' +
+                    '</div>' +
+                    '</div>' +
                         '</div>',
                     showCancelButton: true,
                     confirmButtonClass: 'btn btn-success',
@@ -145,4 +192,6 @@ export class CalendarComponent implements OnInit {
             ]
         });
     }
+
+    public ngAfterViewInit(){}
 }

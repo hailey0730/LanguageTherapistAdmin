@@ -49,6 +49,9 @@ export const AppRoutes: Routes = [
     }, {
         path: 'viewQuestions',
         loadChildren: './viewQuestions/viewQuestions.module#ViewQuestionsModule'
+    }, {
+        path: 'settings',
+        loadChildren: './settings/settings.module#SettingsModule'
     }
   ]
     },
