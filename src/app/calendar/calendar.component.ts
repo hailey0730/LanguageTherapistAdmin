@@ -1,6 +1,7 @@
 // IMPORTANT: this is a plugin which requires jQuery for initialisation and data manipulation
 
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { NgModel } from '@angular/forms';
 
 import { appService } from '../app.service';
 declare const swal: any;
@@ -9,7 +10,7 @@ declare const $: any;
 @Component({
     selector: 'app-calendar-cmp',
     templateUrl: 'calendar.component.html',
-    styleUrls: ['./css/calendar.css'],      //doesn't work on modal, need to make it work
+    styleUrls: [],      
     providers:[
         appService
     ]
@@ -19,8 +20,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     constructor(private appService: appService) {
 
     }
-
-    public recurring: boolean = false;
 
     ngOnInit() {
         const $calendar = $('#fullCalendar');
@@ -32,7 +31,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
         const fiveYearsAfter = y + 5;
         const fiveYearsBefore = y - 5;
-    
+
+        console.log(today);
+        console.log(y);
+        console.log(m);     //need to add 1
+        console.log(d);
 
         $calendar.fullCalendar({
             viewRender: function(view: any, element: any) {
@@ -43,7 +46,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 }
             },
             header: {
-                left: 'title',
+                left: 'title, prevYear, nextYear',
                 center: 'month, agendaWeek, agendaDay',
                 right: 'prev, next, today'
             },
@@ -61,7 +64,20 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 day: {
                     titleFormat: 'D MMM, YYYY'
                 }
-            },
+            }, 
+            businessHours: [ // specify an array instead
+                {
+                    dow: [1, 2, 3, 4, 5], // Monday, Tuesday, Wednesday
+                    start: '08:00', // 8am
+                    end: '18:00' // 6pm
+                }
+                // ,
+                // {
+                //     dow: [4, 5], // Thursday, Friday
+                //     start: '10:00', // 10am
+                //     end: '16:00' // 4pm
+                // }
+            ],
 
             select: function(start: any, end: any) {
 
@@ -69,35 +85,56 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 swal({
                     title: 'Make an appointment',
                     html: '<div class="form-group">' +
-                    '<div class="row">' +
-                            '<input class="form-control" placeholder="Staff" id="input-field">' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                            '<input class="form-control" placeholder="Staff" id="staff">' +
                             '</div>' +
-                    '<div class="row">' +
+                    '<div class="row" style="margin-bottom:10px">' +
                             '<input class="form-control" placeholder="Event Title" id="input-field">' +
                     '</div>' +
-                    '<div class="row">' +
+                    '<div class="row" style="margin-bottom:10px">' +
                     '<div class="col-md-6">' +
-                    '<input type="date" name="input" [(ngModel)]="dateFrom" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
-                    '</div>' +
-                    '<div class="col-md-6">' +
-                    '<input type="time" name="input" [(ngModel)]="timeFrom" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="row">' +
-                    '<div class="col-md-6">' +
-                    '<input type="date" name="input" [(ngModel)]="dateTo" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    '<label style="margin-right:5px">From</label>' +
+                    '<input type="date" name="input" id="dateFrom" value="' + start.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
                     '</div>' +
                     '<div class="col-md-6">' +
-                    '<input type="time" name="input" [(ngModel)]="timeTo" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+                    '<label style="margin-right:5px">at</label>' +
+                    '<input type="time" name="input" id="timeFrom" value="' + start.format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
                     '</div>' +
                     '</div>' +
-                    '<div class="row">' +
-                    '<input class="form-control" placeholder="Note" id="input-field">' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="col-md-6">' +
+                    '<label style="margin-right:5px">To</label>' +
+                    '<input type="date" name="input" id="dateTo" value="' + end.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
                     '</div>' +
-                    '<div class="row">' +
+                    '<div class="col-md-6">' +
+                    '<label style="margin-right:5px">at</label>' +
+                    '<input type="time" name="input" id="timeTo" value="' + end.format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<input class="form-control" placeholder="Note" id="note">' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
                     '<div class="togglebutton">' +
                     '<label>' +
-                    '<input type="checkbox" required/>' +  'Recurring' +
+                    '<input type="checkbox" id="recur" required/>' +  'Recurring' +
+                    '</label>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="radio col-md-4">' +
+                    '<label>' +
+                    '<input type="radio" name= "optionsRadios" value="annually">' + 'Annually' +
+                    '</label>' +
+                    '</div>' +
+                    '<div class="radio col-md-4">' +
+                    '<label>' +
+                    '<input type="radio" name= "optionsRadios" value="monthly">' + 'Monthly' +
+                    '</label>' +
+                    '</div>' +
+                    '<div class="radio col-md-4">' +
+                    '<label>' +
+                    '<input type="radio" name= "optionsRadios" value="daily">' + 'Daily' +
                     '</label>' +
                     '</div>' +
                     '</div>' +
@@ -109,15 +146,46 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 }).then(function(result: any) {
 
                     let eventData;
+                    const staff = $('#staff').val();
                     const event_title = $('#input-field').val();
+                    const note = $('#note').val();
+                    const dateFrom = $('#dateFrom').val();
+                    const dateTo = $('#dateTo').val();
+                    const timeFrom = $('#timeFrom').val();
+                    const timeTo = $('#timeTo').val();
+                    const recur = $('#recur').val();
+                    const freq = $('input[name = "optionsRadios"]:checked').val();
+                    // console.log(result);    //DEBUG: boolean
+                    console.log(staff);
+                    console.log(event_title);
+                    console.log(note);
+                    console.log(dateFrom);
+                    console.log(dateTo);
+                    console.log(timeFrom);
+                    console.log(timeTo);
+                    console.log(recur);
+                    console.log(freq);
 
                     if (event_title) {
+
+
                         eventData = {
+                            // id: ,        //same for recurring events
                             title: event_title,
                             start: start,
                             end: end
+                            // className:       //color of the event (now all green)
+                            // url:         //link can be added
                         };
                         $calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
+
+                        $calendar.fullCalendar('addEventSource', eventData);
+                    }else{
+                        swal(
+                            "Failed to add event",
+                            "You haven't fill in the event title yet. Please try again.",
+                            'warning'
+                        )
                     }
 
                     $calendar.fullCalendar('unselect');
@@ -189,9 +257,26 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     url: 'https://www.creative-tim.com/',
                     className: 'event-orange'
                 }
-            ]
+            ],
+            eventClick: function (event) {      //event on click swal edit or remove
+                console.log(event);
+                // event.title = "CLICKED!";
+                // $calendar.fullCalendar('updateEvent', event);    //do something before, 
+                // and this will update the event
+
+                // or remove the event
+                // $calendar.fullCalendar('removeEvents', );        //some idOrFilter to be removed
+
+                if (event.url) {
+                    window.open(event.url);
+                    return false;
+                }
+            }
         });
     }
 
     public ngAfterViewInit(){}
+
+    
+
 }
