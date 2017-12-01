@@ -1,0 +1,57 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card card-profile">
+                        <div class="card-avatar"> 
+                            <a>
+                                <img class="img" src="{{admin[0]}}" /> 
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">Breaks for {{admin[1]}} {{admin[2]}}
+                            <!-- <small class="category">Complete your profile</small> -->
+                        </h4>
+                        <form>
+                            <div class="row" *ngFor="let week of weeks; let $index = index">
+                                <div class="col-md-2">
+                                    <h4>{{week.day}}</h4>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-info btn-round simple" (click)="add($index)" style="vertical-align: text-bottom;">
+                                        <i class="material-icons">add </i> Break
+                                    </button>
+                                </div>
+                                <div class="col-md-8" id="{{'breakTime' + $index}}">
+                                <div class="row" *ngFor="let duration of week.durations">
+                                <div class="col-md-4" *ngIf="duration.from != null;">
+                                    <label style="margin-right:5px">From</label>
+                                    <input type="time" name="input" id="timeFrom" style="margin: 10px 0 10px 0;" value="{{duration.from}}" [(ngModel)]="duration.from" placeholder="08:00:AM" min="08:00:00"
+                                        max="17:00:00" required/>
+                                </div>
+                                <div class="col-md-4" *ngIf="duration.to != null;">
+                                    <label style="margin-right:5px">To</label>
+                                    <input type="time" name="input" id="timeFrom" style="margin: 10px 0 10px 0;" value="{{duration.to}}" [(ngModel)]="duration.to" placeholder="08:00:AM" min="08:00:00"
+                                        max="17:00:00" required/>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-danger btn-round simple" (click)="delete()" style="vertical-align: text-bottom;">
+                                        <i class="material-icons">delete </i> 
+                                    </button>
+                                </div>
+                                </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-rose pull-right" (click)="update()">Update Working Hours</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

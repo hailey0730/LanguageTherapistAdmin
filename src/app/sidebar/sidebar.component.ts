@@ -111,7 +111,7 @@ export const ROUTES: RouteInfo[] = [
         type: 'sub',
         icontype: 'assignment',
         children: [
-            { path: 'fillInBlanks', title: 'Fill in the blanks', ab: 'FB' }
+            { path: 'fillInBlanks', title: 'Fill in the blanks', ab: '' }
             // { path: 'grid', title: 'Grid System', ab: 'GS' },
            
         ]
@@ -121,7 +121,7 @@ export const ROUTES: RouteInfo[] = [
         type: 'sub',
         icontype: 'history',
         children: [
-            { path: 'fillInBlanks', title: 'Fill in the blanks', ab: 'FB' }
+            { path: 'fillInBlanks', title: 'Fill in the blanks', ab: '' }
             // { path: 'grid', title: 'Grid System', ab: 'GS' },
 
         ]
@@ -131,7 +131,9 @@ export const ROUTES: RouteInfo[] = [
         type: 'sub',
         icontype: 'settings',
         children: [
-            { path: 'accountDetails', title: 'Account details', ab: 'AC' }
+            { path: 'accountDetails', title: 'Account details', ab: '' },
+            { path: 'workingHours', title: 'Working Hours', ab: '' },
+            { path: 'breaks', title: 'Breaks', ab: '' }
             // { path: 'grid', title: 'Grid System', ab: 'GS' },
 
         ]

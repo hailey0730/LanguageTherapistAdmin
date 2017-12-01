@@ -1,0 +1,50 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card card-profile">
+                        <div class="card-avatar"> 
+                            <a>
+                                <img class="img" src="{{admin[0]}}" /> 
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">Working Hours of {{admin[1]}} {{admin[2]}}
+                            <!-- <small class="category">Complete your profile</small> -->
+                        </h4>
+                        <form>
+                            <div class="row" *ngFor="let week of weeks; let $index = index">
+                                <div class="col-sm-6 col-lg-3">
+                                    <h4>{{week.day}}</h4>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="togglebutton">
+                                        <label>
+                                            <input type="checkbox" name="{{'switch' + $index}}" [(ngModel)]="week.switch">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <label style="margin-right:5px">From</label>
+                                    <input type="time" name="input" id="timeFrom" value="{{week.from}}" [(ngModel)]="week.from" min="08:00:00"
+                                        max="17:00:00" required/>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <label style="margin-right:5px">To</label>
+                                    <input type="time" name="input" id="timeFrom" value="{{week.to}}" [(ngModel)]="week.to" min="08:00:00"
+                                        max="17:00:00" required/>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-rose pull-right" (click)="update()">Update Working Hours</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
