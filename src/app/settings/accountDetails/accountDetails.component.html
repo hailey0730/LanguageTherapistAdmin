@@ -3,10 +3,11 @@
         <div class="row">
             
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card card-profile">
+                <div class="card" >
+                    <div class="card card-profile" >
                     
                         <div id="picDiv" class="fileinput text-center" data-provides="fileinput">
+                            <ng-container *ngIf="admin!= null;">
                             <div class="fileinput-new thumbnail img-circle">
                                 <img src="../../assets/img/placeholder.jpg" alt="...">
                             </div>
@@ -23,6 +24,7 @@
                                 <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput">
                                     <i class="fa fa-times"></i> Remove</a>
                             </div>
+                            </ng-container>
                         </div>
                     
                     </div>
@@ -30,7 +32,7 @@
                         <h4 class="card-title">Account Profile 
                             <!-- <small class="category">Complete your profile</small> -->
                         </h4>
-                        <form>
+                        <form *ngIf="admin != null;">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group label-floating">

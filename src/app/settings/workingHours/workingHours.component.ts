@@ -51,10 +51,25 @@ export class WorkingHoursComponent implements OnInit, AfterViewInit {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes'
         }).then((result) => {
-            console.log(this.weeks);        //DEBUG
-           
+            var timefrom = [];
+            var timeto = [];
             // update weeks to DB
-              
+            $('.timeFrom').each(function (i, obj) {
+               timefrom[i] = $(this).val();
+            });
+            // console.log(timefrom);      //DEBUG
+
+            $('.timeTo').each(function (i, obj) {
+                timeto[i] = $(this).val();
+            });
+            // console.log(timeto);        //DEBUG
+            
+            for(var i = 0; i < this.weeks.length; i ++){
+                this.weeks[i].from = timefrom[i];
+                this.weeks[i].to = timeto[i];
+            }
+
+            console.log(this.weeks);        //DEBUG
         }, function (dismiss) {
             if (dismiss === 'cancel') {
                

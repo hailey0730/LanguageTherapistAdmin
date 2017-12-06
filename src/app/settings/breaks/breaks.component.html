@@ -15,7 +15,49 @@
                         <h4 class="card-title">Breaks for {{admin[1]}} {{admin[2]}}
                             <!-- <small class="category">Complete your profile</small> -->
                         </h4>
-                        <form>
+                        <div class="table-responsive">
+                            <table class="table" id="breakTable">
+                                <!-- <thead>
+                                    <tr>
+                                        <th class="text-center">{{ tableData1.headerRow[0] }}</th>
+                                        <th>{{ tableData1.headerRow[1] }}</th>
+                                        <th>{{ tableData1.headerRow[2] }}</th>
+                                        <th>{{ tableData1.headerRow[3] }}</th>
+                                        <th class="text-right">{{ tableData1.headerRow[4] }}</th>
+                                        <th class="text-right">{{ tableData1.headerRow[5] }}</th>
+                                    </tr>
+                                </thead> -->
+                                <tbody>
+                                    <tr *ngFor="let week of weeks; let $index = index">
+                                        <td class="text-center">{{week.day}}</td>
+                                        <td>
+                                            <button id="add" type="button" rel="tooltip" class="btn btn-info btn-round simple">
+                                                <i class="material-icons">add</i>
+                                            </button>
+                                        </td>
+                                        <td id="{{'breakTime' + $index}}">
+                                            <tr  *ngFor="let duration of week.durations">
+                                                <ng-container *ngIf="duration != null;">
+                                                <td >
+                                                <label style="margin-right:5px">From</label>
+                                                <input type="time" name="input" class="timeFrom" style="margin: 10px 0 10px 0;" value="{{duration.from}}" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>
+                                                <label style="margin-right:5px">To</label>
+                                                <input type="time" name="input" class="timeTo" style="margin: 10px 0 10px 0;" value="{{duration.to}}" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>
+                                                </td>
+                                                
+                                                <td class="td-actions text-right">
+                                                    <button id="delete" type="button" rel="tooltip" class="btn btn-danger btn-round simple">
+                                                        <i class="material-icons">close</i>
+                                                    </button>
+                                                </td>
+                                                </ng-container>
+                                            </tr>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- <form>
                             <div class="row" *ngFor="let week of weeks; let $index = index">
                                 <div class="col-md-2">
                                     <h4>{{week.day}}</h4>
@@ -38,16 +80,16 @@
                                         max="17:00:00" required/>
                                 </div>
                                 <div class="col-md-4">
-                                    <button type="submit" class="btn btn-danger btn-round simple" (click)="delete()" style="vertical-align: text-bottom;">
+                                    <button type="submit" class="btn btn-danger btn-round simple" (click)="delete($event)" style="vertical-align: text-bottom;">
                                         <i class="material-icons">delete </i> 
                                     </button>
                                 </div>
                                 </div>
                                 </div>
-                            </div>
-                            <button type="submit" class="btn btn-rose pull-right" (click)="update()">Update Working Hours</button>
+                            </div> -->
+                            <button type="submit" class="btn btn-rose pull-right" (click)="update()">Update Breaks</button>
                             <div class="clearfix"></div>
-                        </form>
+                       <!-- </form> -->
                     </div>
                 </div>
             </div>

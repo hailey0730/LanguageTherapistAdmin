@@ -13,6 +13,9 @@ declare const $: any;
 export class AccountDetailsComponent implements OnInit, AfterViewInit {
     
     public admin: any[];
+    public adminPic: string;
+    private admininfoLink = 'http://testingtesttest.000webhostapp.com/adminInfo.php';
+    private admininfoPostLink = 'http://testingtesttest.000webhostapp.com/adminInfo.json';
 
     constructor(private appService: appService) {
         
@@ -21,10 +24,17 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
 
     public ngOnInit() {
        // set value of the input fields
-        this.admin = ["../assets/img/faces/avatar.jpg", "Tania", "Andrew", "bd546139", "66443347", "hayhay0730@gmail.com",
-            "somewhere over the rainbow", "HK", "China", "some description"];
+        // this.admin = ["../assets/img/faces/avatar.jpg", "Tania", "Andrew", "bd546139", "66443347", "hayhay0730@gmail.com",
+        //     "somewhere over the rainbow", "HK", "China", "some description"];
+        // this.admin[0] != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
+        this.appService.getJson(this.admininfoLink).then((data)=>{
+            console.log(data);
+            this.admin = data['Admin'];
+            this.adminPic = this.admin[0] == ""?"../../assets/img/placeholder.jpg":this.admin[0];
 
-        this.admin[0] != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
+            this.admin[0] != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
+        })
+
             
     }
     
@@ -42,7 +52,7 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes'
         }).then((result) => {
-            this.admin[0] = $('#pic').val();
+            this.admin[0] = $('#pic').val()==""?this.admin[0]:$('#pic').val();
             this.admin[1] = $('#fn').val();
             this.admin[2] = $('#ln').val();
             this.admin[3] = $('#phone').val();
@@ -56,6 +66,8 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
             console.log(this.admin);        //DEBUG
 
             // update info to DB
+            var updateAdmin = {"Admin":this.admin};
+            this.appService.postJson(this.admininfoPostLink, updateAdmin);
               
         }, function (dismiss) {
             if (dismiss === 'cancel') {
