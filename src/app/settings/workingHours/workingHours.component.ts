@@ -34,11 +34,25 @@ export class WorkingHoursComponent implements OnInit, AfterViewInit {
         this.admin = ["../assets/img/faces/avatar.jpg", "Tania", "Andrew", "bd546139", "66443347", "hayhay0730@gmail.com",
             "somewhere over the rainbow", "HK", "China", "some description"];
 
+        $("form").on('mouseover', '.row', function (event) {
+            var weekday = $(event.target).children()[0];
+            var i = weekday == 'Monday'?0:weekday == 'Tuesday'?1:weekday == 'Wednesday'?2:weekday == 'Thursday'?3:weekday == 'Friday'?4:weekday == 'Saturday'?5:6;
+            var row = event.target.closest('.row');
+            $(row).css('background-color', '#fdeeff');
+       
+        });
+
+        $("form").on('mouseout', '.row', function (event) {
+            var weekday = $(event.target).children()[0];
+            var i = weekday == 'Monday' ? 0 : weekday == 'Tuesday' ? 1 : weekday == 'Wednesday' ? 2 : weekday == 'Thursday' ? 3 : weekday == 'Friday' ? 4 : weekday == 'Saturday' ? 5 : 6;
+            var row = event.target.closest('.row');
+            $(row).css('background-color', 'white');
             
+        });
     }
     
     ngAfterViewInit() {
-       
+        
     }
 
     update(){

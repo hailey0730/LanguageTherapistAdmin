@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { LbdTableComponent } from '../lbd/lbd-table/lbd-table.component';
+import { MaterialModule, MdSelectModule } from '@angular/material';
 
 import { CalendarComponent } from './calendar.component';
 import { CalendarRoutes } from './calendar.routing';
@@ -11,7 +12,10 @@ import { CalendarRoutes } from './calendar.routing';
     imports: [
         CommonModule,
         RouterModule.forChild(CalendarRoutes),
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        MdSelectModule
     ],
     declarations: [CalendarComponent]
 })

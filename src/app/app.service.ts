@@ -28,7 +28,7 @@ questionEdit = {};
     }
 
     postJson(link, obj){
-        this.http.post(link, obj);
+        this.http.post(link, JSON.stringify(obj));
     }
 
 }

@@ -87,6 +87,42 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             annually:false
         },
         {
+            id: 999,
+            title: 'Repeating Event',
+            start: new Date(this.y, this.m, this.d, 6, 0),
+            end: new Date(this.y, this.m, this.d, 8, 0),
+            allDay: false,
+            className: 'event-rose',
+            recur: true,
+            daily: true,
+            monthly: false,
+            annually:false
+        },
+        {
+            id: 999,
+            title: 'Repeating Event',
+            start: new Date(this.y, this.m, this.d + 1, 6, 0),
+            end: new Date(this.y, this.m, this.d +1, 8, 0),
+            allDay: false,
+            className: 'event-rose',
+            recur: true,
+            daily: true,
+            monthly: false,
+            annually:false
+        },
+        {
+            id: 999,
+            title: 'Repeating Event',
+            start: new Date(this.y, this.m, this.d + 2, 6, 0),
+            end: new Date(this.y, this.m, this.d +2, 8, 0),
+            allDay: false,
+            className: 'event-rose',
+            recur: true,
+            daily: true,
+            monthly: false,
+            annually:false
+        },
+        {
             id: 301,
             title: 'Meeting',
             start: new Date(this.y, this.m, this.d - 1, 10, 30),
@@ -256,28 +292,63 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             select: (start: any, end: any)=> {
                 var self = this;
                 // on select we show the Sweet Alert modal with an input
-
                 swal({
                     title: 'Make an appointment',
-                    html: '<input class="form-control" placeholder="Staff" id="staff" value="' + adminName + '" readonly>' +
-                    '<input class="form-control" placeholder="Event Title" id="input-field">' +
-                    '<div class="row">' +
+                    html: '<div class="form-group">' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                            '<input class="form-control" placeholder="Staff" id="staff" value="'+ adminName +'" readonly>' +
+                            '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                            '<input class="form-control" placeholder="Event Title" id="input-field">' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="col-md-6">' +
                     '<label style="margin-right:5px">From</label>' +
                     '<input type="date" name="input" id="dateFrom" value="' + start.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    '</div>' +
+                    '<div class="col-md-6">' +
+                    '<label style="margin-right:5px">at</label>' +
                     '<input type="time" name="input" id="timeFrom" value="' + start.format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
                     '</div>' +
-                    '<div class="row">' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="col-md-6">' +
                     '<label style="margin-right:5px">To</label>' +
                     '<input type="date" name="input" id="dateTo" value="' + end.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    '</div>' +
+                    '<div class="col-md-6">' +
+                    '<label style="margin-right:5px">at</label>' +
                     '<input type="time" name="input" id="timeTo" value="' + end.format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
                     '</div>' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
                     '<input class="form-control" placeholder="Note" id="note">' +
-                    '<div class="row">' +
-                    '<input type="checkbox" name="recur" required/>' + 'Recurring' +
-                    '</div>' + 
-                    '<input type="radio" name= "optionsRadios" value="annually" style="margin-left:8px;">' + 'Annually(3 years)' +
-                    '<input type="radio" name= "optionsRadios" value="monthly" style="margin-left:8px;">' + 'Monthly(6 months)' +
-                    '<input type="radio" name= "optionsRadios" value="daily" style="margin-left:8px;">' + 'Daily(7 days)' ,
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="togglebutton">' +
+                    '<label>' +
+                    '<input type="checkbox" name="recur" required/>' +  'Recurring' +
+                    '</label>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="radio col-md-4">' +
+                    '<label>' +
+                    '<input type="radio" name= "optionsRadios" value="annually">' + 'Annually(3 years)' +
+                    '</label>' +
+                    '</div>' +
+                    '<div class="radio col-md-4">' +
+                    '<label>' +
+                    '<input type="radio" name= "optionsRadios" value="monthly">' + 'Monthly(6 months)' +
+                    '</label>' +
+                    '</div>' +
+                    '<div class="radio col-md-4">' +
+                    '<label>' +
+                    '<input type="radio" name= "optionsRadios" value="daily">' + 'Daily(7 days)' +
+                    '</label>' +
+                    '</div>' +
+                    '</div>' +
+                        '</div>',
                     showCancelButton: true,
                     confirmButtonClass: 'btn btn-success',
                     cancelButtonClass: 'btn btn-danger',
@@ -399,29 +470,68 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             eventClick: (event:any)=> {      //event on click swal edit or remove
                 // console.log(event);     //DEBUG
                 var self = this;
-                var temp = self.loadRecur(event.id);
-                
+                var index = self.loadindex(event.id);
+                var recur = self.loadRecur(event.id);
+                var m = self.loadmonthly(event.id);
+                var a = self.loadannually(event.id);
+                var d = self.loaddaily(event.id);
                 swal({
                     title: 'Make an appointment',
-                    html: '<input class="form-control" placeholder="Staff" id="staff" value="' + adminName + '" readonly>' +
-                    '<input class="form-control" value="' + event.title + '" id="input-field">' +
-                    '<div class="row">' +
+                    html: '<div class="form-group">' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<input class="form-control" placeholder="Staff" id="staff" value="' + adminName + '" readonly>' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<input class="form-control" value="'+ event.title + '" id="input-field">' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="col-md-6">' +
                     '<label style="margin-right:5px">From</label>' +
                     '<input type="date" name="input" id="dateFrom" value="' + event.start.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    '</div>' +
+                    '<div class="col-md-6">' +
+                    '<label style="margin-right:5px">at</label>' +
                     '<input type="time" name="input" id="timeFrom" value="' + event.start.format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
                     '</div>' +
-                    '<div class="row">' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="col-md-6">' +
                     '<label style="margin-right:5px">To</label>' +
                     '<input type="date" name="input" id="dateTo" value="' + event.end.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    '</div>' +
+                    '<div class="col-md-6">' +
+                    '<label style="margin-right:5px">at</label>' +
                     '<input type="time" name="input" id="timeTo" value="' + event.end.format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
                     '</div>' +
-                    '<input class="form-control" placeholder="Note" id="note">' +
-                    '<div class="row">' +
-                    '<input type="checkbox" name="recur" ' + temp.recur + ' required/>' + 'Recurring' +
                     '</div>' +
-                    '<input type="radio" name= "optionsRadios" value="annually" style="margin-left:8px;" ' + temp.annually + '> Annually(3 years)' +
-                    '<input type="radio" name= "optionsRadios" value="monthly" style="margin-left:8px;" ' + temp.monthly + '> Monthly(6 months)' +
-                    '<input type="radio" name= "optionsRadios" value="daily" style="margin-left:8px;" ' + temp.daily + '> Daily(7 days)',
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<input class="form-control" placeholder="Note" id="note">' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="togglebutton">' +
+                    '<label>' +
+                    '<input type="checkbox" name="recur" checked=' + self.loadRecur(event.id) + ' required/>' + 'Recurring' +
+                    '</label>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="row" style="margin-bottom:10px">' +
+                    '<div class="radio col-md-4">' +
+                    '<label>' +
+                    '<input type="radio" name= "optionsRadios" value="annually" checked=' + a + '> Annually(3 years)' +
+                    '</label>' +
+                    '</div>' +
+                    '<div class="radio col-md-4">' +
+                    '<label>' +
+                    '<input type="radio" name= "optionsRadios" value="monthly" checked=' + m + '> Monthly(6 months)' +
+                    '</label>' +
+                    '</div>' +
+                    '<div class="radio col-md-4">' +
+                    '<label>' +
+                    '<input type="radio" name= "optionsRadios" value="daily" checked=' + d + '> Daily(7 days)' +
+                    '</label>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>',
                     showCancelButton: true,
                     confirmButtonClass: 'btn btn-success',
                     cancelButtonClass: 'btn btn-danger',
@@ -540,14 +650,62 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     return false;
                 }
             },
-            eventDrop:  (event, delta, revertFunc)=> {
-                var self = this;
-                self.customMessagePopUp(revertFunc, event.title + " was dropped on " + event.start.format());
+            eventDrop: function (event, delta, revertFunc) {
+
+                // this.customMessagePopUp(revertFunc, event.title + " was dropped on " + event.start.format());
+
+                swal({
+                    title: event.title + " was dropped on " + event.start.format(),
+                    text: "Are you sure about this change?",
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.value) {
+                        swal(
+                            'Updated!',
+                            'Event has been updated.',
+                            'success'
+                        )
+
+                        //update event date
+                    }
+                },function(dismiss){
+                    if(dismiss === 'cancel'){
+                        revertFunc();
+                    }
+                })
 
             },
-            eventResize:  (event, delta, revertFunc)=> {
-                var self = this;
-                self.customMessagePopUp(revertFunc, event.title + " end is now " + event.end.format());
+            eventResize: function (event, delta, revertFunc) {
+
+                // this.customMessagePopUp(revertFunc, event.title + " end is now " + event.end.format());
+
+                swal({
+                    title: event.title + " end is now " + event.end.format(),
+                    text: "Are you sure about this change?",
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.value) {
+                        swal(
+                            'Updated!',
+                            'Event has been updated.',
+                            'success'
+                        )
+
+                        //update event time
+                    }
+                }, function (dismiss) {
+                    if (dismiss === 'cancel') {
+                        revertFunc();
+                    }
+                })
 
             }
 
@@ -573,18 +731,52 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         $('#fullCalendar').fullCalendar('renderEvents', renderList);
     }
 
-    loadRecur(id) {
-        var obj:any;
+    loadindex(id) {
+        var index;
         for (var i = 0; i < this.eventList.length; i++) {
             if (this.eventList[i].id == id) {
-                //         console.log(this.eventList[i]['recur']);
-                if (this.eventList[i]['recur']) {
-                    obj = this.eventList[i]['daily'] ? { recur: 'checked', annually: '', monthly: '', daily: 'checked' } : this.eventList[i]['monthly'] ? { recur: 'checked', annually: '', monthly: 'checked', daily: '' } : { recur: 'checked', annually: 'checked', monthly: '', daily: '' }
-                    
-                }else{
-                    obj = { recur: '', annually: '', monthly: '', daily: '' } ;
-                }
-                return obj;
+                return i;
+            }
+            // index = this.eventList[i].id == id&& i;
+        }
+    }
+
+    loadRecur(id){
+        var index;
+        for(var i = 0; i < this.eventList.length; i ++){
+            if(this.eventList[i].id == id){
+        //         console.log(this.eventList[i]['recur']);
+                return this.eventList[i]['recur'];
+            } 
+            // index = this.eventList[i].id == id&& i;
+        }
+    }
+
+    loaddaily(id) {
+        var index;
+        for (var i = 0; i < this.eventList.length; i++) {
+            if (this.eventList[i].id == id) {
+                return this.eventList[i]['daily'];
+            }
+            // index = this.eventList[i].id == id&& i;
+        }
+    }
+
+    loadmonthly(id) {
+        var index;
+        for (var i = 0; i < this.eventList.length; i++) {
+            if (this.eventList[i].id == id) {
+                return this.eventList[i]['monthly'];
+            }
+            // index = this.eventList[i].id == id&& i;
+        }
+    }
+
+    loadannually(id) {
+        var index;
+        for (var i = 0; i < this.eventList.length; i++) {
+            if (this.eventList[i].id == id) {
+                return this.eventList[i]['annually'];
             }
             // index = this.eventList[i].id == id&& i;
         }
@@ -602,7 +794,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         }
     }
 
-    
+    // doesn't work in another function
     customMessagePopUp(func, message){
         swal({
             title: message,
@@ -628,7 +820,5 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             }
         })
     }
-
-    
    
  }
