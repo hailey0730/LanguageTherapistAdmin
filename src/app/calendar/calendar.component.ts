@@ -48,7 +48,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             recur: true,
             daily: true,
             monthly: false,
-            annually:false
+            annually:false,
+            order:0
         },
         {
             id: 999,
@@ -60,7 +61,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             recur: true,
             daily: true,
             monthly: false,
-            annually:false
+            annually:false,
+            order:1
         },
         {
             id: 999,
@@ -72,7 +74,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             recur: true,
             daily: true,
             monthly: false,
-            annually:false
+            annually:false,
+            order:2
         },
         {
             id: 999,
@@ -84,7 +87,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             recur: true,
             daily: true,
             monthly: false,
-            annually:false
+            annually:false,
+            order:3
         },
         {
             id: 301,
@@ -295,65 +299,39 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     const recur = $('input[name = "recur"]:checked').val();
                     const freq = $('input[name = "optionsRadios"]:checked').val();
                     // console.log(result);    //DEBUG: boolean
-                    console.log(staff);
-                    console.log(event_title);
-                    console.log(note);
-                    console.log(dateFrom);
-                    console.log(dateTo);
-                    console.log(timeFrom);
-                    console.log(timeTo);
-                    console.log(recur);
-                    console.log(freq);
-                    console.log(start);
-                    console.log(end);
+                    // DEBUG:===============
+                    // console.log(staff);
+                    // console.log(event_title);
+                    // console.log(note);
+                    // console.log(dateFrom);
+                    // console.log(dateTo);
+                    // console.log(timeFrom);
+                    // console.log(timeTo);
+                    // console.log(recur);
+                    // console.log(freq);
+                    // console.log(start);
+                    // console.log(end);
+                    // ====================
                     
                     if (event_title) {
                        
                             var times = recur != 'on'? 1 : freq == 'annually'? 3: freq == 'monthly'? 6 : freq == 'daily' && 7;
                             var randomId = Math.floor(Math.random() * 1000);
                             for(var i = 0; i < times; i ++){
-                                var customStart;
-                                var customEnd;
-                                var customClass;
-                                var r= false;
-                                var d= false;
-                                var m= false;
-                                var a= false;
-                                if(times == 1){
-
-                                    customStart = start;
-                                    customEnd = end;
-                                    customClass = 'event-green';
-
-                                }else if(times == 3){
-
-                                    customStart = new Date(parseInt(dateFrom.substring(0,4)) + i, dateFrom.substring(5, 7) - 1, dateFrom.substring(8, 10), timeFrom.substring(0, 2), timeFrom.substring(3, 5));
-                                    customEnd = new Date(parseInt(dateFrom.substring(0, 4)) + i, dateTo.substring(5, 7) - 1, dateTo.substring(8, 10), timeTo.substring(0, 2), timeTo.substring(3, 5));
-                                    customClass = 'event-red';
-                                    r=true;
-                                    a=true;
-                                    
-                                }else if(times == 6){
-
-                                    customStart = new Date(dateFrom.substring(0,4), dateFrom.substring(5, 7) - 1 + i, dateFrom.substring(8, 10), timeFrom.substring(0, 2), timeFrom.substring(3, 5));
-                                    customEnd = new Date(dateFrom.substring(0,4), dateTo.substring(5, 7) - 1 + i, dateTo.substring(8, 10), timeTo.substring(0, 2), timeTo.substring(3, 5));
-                                    customClass = 'event-orange';
-                                    r=true;
-                                    m=true;
-                                   
-                                }else if(times == 7){
-
-                                    customStart = new Date(dateFrom.substring(0,4), dateFrom.substring(5, 7) - 1, parseInt(dateFrom.substring(8, 10)) + i, timeFrom.substring(0, 2), timeFrom.substring(3, 5));
-                                    customEnd = new Date(dateFrom.substring(0,4), dateTo.substring(5, 7) - 1, parseInt(dateTo.substring(8, 10)) + i, timeTo.substring(0, 2), timeTo.substring(3, 5));
-                                    customClass = 'event-azure';
-                                    r=true;
-                                    d=true;
-                                   
-                                }
+                                var temp = self.custStartCustEnd(parseInt(dateFrom.substring(0, 4)), parseInt(dateFrom.substring(5, 7)) - 1, parseInt(dateFrom.substring(8, 10)), parseInt(timeFrom.substring(0, 2)), parseInt(timeFrom.substring(3, 5)), parseInt(dateTo.substring(0, 4)), parseInt(dateTo.substring(5, 7)) - 1, parseInt(dateTo.substring(8, 10)), parseInt(timeTo.substring(0, 2)), parseInt(timeTo.substring(3, 5)), times, i);
+                                var customStart = temp.start;
+                                var customEnd = temp.end;
+                                var customClass = temp.class;
+                                var r = temp.recur;
+                                var d = temp.daily;
+                                var m = temp.monthly;
+                                var a = temp.annually;
 
                                 eventData = {
                                     id: randomId,        //same for recurring events
+                                    staff: adminName,
                                     title: event_title,
+                                    note: note,
                                     start: customStart,
                                     end: customEnd,
                                     className: customClass,     //color of the event (azure for annually)
@@ -361,7 +339,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                                     recur:r,
                                     daily:d,
                                     monthly:m,
-                                    annually:a
+                                    annually:a,
+                                    order: i
                                 };
 
                                 console.log(eventData);
@@ -403,19 +382,20 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 
                 swal({
                     title: 'Make an appointment',
-                    html: '<input class="form-control" placeholder="Staff" id="staff" value="' + adminName + '" readonly>' +
+                    html: '<input class="form-control" placeholder="Staff" id="staff" value="' + event.staff + '" readonly>' +
                     '<input class="form-control" value="' + event.title + '" id="input-field">' +
+                    '<label style="margin-right:5px;color:black;">Drag to modify date</label>' +
                     '<div class="row">' +
                     '<label style="margin-right:5px">From</label>' +
-                    '<input type="date" name="input" id="dateFrom" value="' + event.start.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    // '<input type="date" name="input" id="dateFrom" value="' + event.start.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
                     '<input type="time" name="input" id="timeFrom" value="' + event.start.format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
                     '</div>' +
                     '<div class="row">' +
                     '<label style="margin-right:5px">To</label>' +
-                    '<input type="date" name="input" id="dateTo" value="' + event.end.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    // '<input type="date" name="input" id="dateTo" value="' + event.end.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
                     '<input type="time" name="input" id="timeTo" value="' + event.end.format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
                     '</div>' +
-                    '<input class="form-control" placeholder="Note" id="note">' +
+                    '<input class="form-control" placeholder="Note" id="note" value="' + event.note + '">' +
                     '<div class="row">' +
                     '<input type="checkbox" name="recur" ' + temp.recur + ' required/>' + 'Recurring' +
                     '</div>' +
@@ -433,67 +413,54 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                         const staff = $('#staff').val();
                         const event_title = $('#input-field').val();
                         const note = $('#note').val();
-                        const dateFrom = $('#dateFrom').val();
-                        const dateTo = $('#dateTo').val();
                         const timeFrom = $('#timeFrom').val();
                         const timeTo = $('#timeTo').val();
                         const recur = $('input[name = "recur"]:checked').val();
                         const freq = $('input[name = "optionsRadios"]:checked').val();
                         // console.log(result);    //DEBUG: boolean
-                        console.log(staff);
-                        console.log(event_title);
-                        console.log(note);
-                        console.log(dateFrom);
-                        console.log(dateTo);
-                        console.log(timeFrom);
-                        console.log(timeTo);
-                        console.log(recur);
-                        console.log(freq);
+                        // DEBUG:===============
+                        // console.log(staff);
+                        // console.log(event_title);
+                        // console.log(note);
+                        // console.log(timeFrom);
+                        // console.log(timeTo);
+                        // console.log(recur);
+                        // console.log(freq);
+                        // ====================
                         if (event_title) {
                             var times = recur != 'on' ? 1 : freq == 'annually' ? 3 : freq == 'monthly' ? 6 : freq == 'daily' && 7;
-                            self.deleteEventList(event.id);
-                            for (var i = 0; i < times; i++) {
-                                var customStart;
-                                var customEnd;
-                                var customClass;
-                                var r = false;
-                                var d = false;
-                                var m = false;
-                                var a = false;
-                                if (times == 1) {
-
-                                    customStart = event.start;
-                                    customEnd = event.end;
-                                    customClass = 'event-green';
-
-                                } else if (times == 3) {
-
-                                    customStart = new Date(parseInt(dateFrom.substring(0, 4)) + i, dateFrom.substring(5, 7) - 1, dateFrom.substring(8, 10), timeFrom.substring(0, 2), timeFrom.substring(3, 5));
-                                    customEnd = new Date(parseInt(dateFrom.substring(0, 4)) + i, dateTo.substring(5, 7) - 1, dateTo.substring(8, 10), timeTo.substring(0, 2), timeTo.substring(3, 5));
-                                    customClass = 'event-red';
-                                    r=true;
-                                    a=true;
-
-                                } else if (times == 6) {
-
-                                    customStart = new Date(dateFrom.substring(0, 4), dateFrom.substring(5, 7) - 1 + i, dateFrom.substring(8, 10), timeFrom.substring(0, 2), timeFrom.substring(3, 5));
-                                    customEnd = new Date(dateFrom.substring(0, 4), dateTo.substring(5, 7) - 1 + i, dateTo.substring(8, 10), timeTo.substring(0, 2), timeTo.substring(3, 5));
-                                    customClass = 'event-orange';
-                                    r=true;
-                                    m=true;
-
-                                } else if (times == 7) {
-
-                                    customStart = new Date(dateFrom.substring(0, 4), dateFrom.substring(5, 7) - 1, parseInt(dateFrom.substring(8, 10)) + i, timeFrom.substring(0, 2), timeFrom.substring(3, 5));
-                                    customEnd = new Date(dateFrom.substring(0, 4), dateTo.substring(5, 7) - 1, parseInt(dateTo.substring(8, 10)) + i, timeTo.substring(0, 2), timeTo.substring(3, 5));
-                                    customClass = 'event-azure';
-                                    r=true;
-                                    d=true;
+                            var start: any;
+                            var end:any;
+                            for(var i = 0; i < self.eventList.length; i ++){
+                                if(self.eventList[i].id == event.id && start == null){
+                                    start = self.eventList[i].start;
+                                    end = self.eventList[i].end;
+                                    break;
                                 }
+                            }
+                            console.log(start.getMonth());
+                            console.log(end);
+                            for(var i = 0; i < times; i ++){
+                                self.deleteEventList(event.id);
+                                
+                            }
+                            $calendar.fullCalendar('removeEvents', event.id);
+                            
+                            for (var i = 0; i < times; i++) {
+                                var temp = self.custStartCustEnd(start.getFullYear(), start.getMonth(), start.getDate(), timeFrom.substring(0, 2), timeFrom.substring(3, 5), end.getFullYear(), end.getMonth(), end.getDate(), timeTo.substring(0, 2), timeTo.substring(3, 5),times,i);
+                                var customStart = temp.start;
+                                var customEnd = temp.end;
+                                var customClass = temp.class;
+                                var r = temp.recur;
+                                var d = temp.daily;
+                                var m = temp.monthly;
+                                var a = temp.annually;
 
                                 eventData = {
                                     id: event.id,        //same for recurring events
+                                    staff: event.staff,
                                     title: event_title,
+                                    note: note,
                                     start: customStart,
                                     end: customEnd,
                                     className: customClass,     //color of the event (azure for annually)
@@ -501,18 +468,14 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                                     recur: r,
                                     daily: d,
                                     monthly: m,
-                                    annually: a
+                                    annually: a,
+                                    order:i
                                 };
 
                                 self.addEventList(eventData);
-                                
-
                                 // console.log(eventData);     //DEBUG
-                                $calendar.fullCalendar('removeEvents',event.id);
                                 $calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
-
-                                $calendar.fullCalendar('updateEvent', event);    //do something before, 
-                                // and this will update the event
+                                $calendar.fullCalendar('addEventSource', eventData);
                             }
 
                         } else {
@@ -542,12 +505,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             },
             eventDrop:  (event, delta, revertFunc)=> {
                 var self = this;
-                self.customMessagePopUp(revertFunc, event.title + " was dropped on " + event.start.format());
+                self.customMessagePopUp(revertFunc, event.title + " was dropped on " + event.start.format(), event);
 
             },
             eventResize:  (event, delta, revertFunc)=> {
                 var self = this;
-                self.customMessagePopUp(revertFunc, event.title + " end is now " + event.end.format());
+                self.customMessagePopUp(revertFunc, event.title + " end is now " + event.end.format(), event);
 
             }
 
@@ -560,6 +523,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         // console.log(this.selectedUsers);     //DEBUG
         var list = [];
         var renderList = [];
+        
         for(var i = 0; i < this.selectedUsers.length; i ++){
             list = this.selectedUsers[i] == 'Tania'? this.eventList: this.selectedUsers[i] == 'John'?this.JohnList: this.MaryList;
 
@@ -569,8 +533,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
         }
         // console.log(renderList);         //DEBUG
-        $('#fullCalendar').fullCalendar('removeEventSources');
-        $('#fullCalendar').fullCalendar('renderEvents', renderList);
+        $('#fullCalendar').fullCalendar('removeEvents');
+        $('#fullCalendar').fullCalendar('addEventSource', renderList);
     }
 
     loadRecur(id) {
@@ -602,8 +566,51 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         }
     }
 
+    custStartCustEnd(sy,sm,sd,sh,smin,ey,em,ed,eh,emin,times,i){
+        var customStart;
+        var customEnd;
+        var customClass;
+        var r = false;
+        var d = false;
+        var m = false;
+        var a = false;
+        console.log(sy);
+        console.log(sm);
+        console.log(sd);
+        console.log(sh);
+        console.log(smin);
+        if (times == 1) {
+            customStart = new Date(sy, sm, sd, sh, smin);
+            customEnd = new Date(ey, em, ed, eh, emin);
+            customClass = 'event-green';
+        } else if (times == 3) {
+            customStart = new Date(sy+i, sm, sd, sh, smin);
+            customEnd = new Date(ey+i, em, ed, eh, emin);
+            customClass = 'event-red';
+            r = true;
+            a = true;
+        } else if (times == 6) {
+            customStart = new Date(sy, sm+i, sd, sh, smin);
+            customEnd = new Date(ey, em+i, ed, eh, emin);
+            customClass = 'event-orange';
+            r = true;
+            m = true;
+        } else if (times == 7) {
+            customStart = new Date(sy, sm, sd+i, sh, smin);
+            customEnd = new Date(ey, em, ed+i, eh, emin);
+            customClass = 'event-azure';
+            r = true;
+            d = true;
+        }
+        console.log(customStart);
+        console.log({ start: customStart, end: customEnd });        //DEBUG
+        return {start:customStart,end:customEnd,class:customClass,recur:r,daily:d,monthly:m,annually:a};
+
+    }
+
     
-    customMessagePopUp(func, message){
+    customMessagePopUp(func, message,event){
+        var self = this;
         swal({
             title: message,
             text: "Are you sure about this change?",
@@ -613,15 +620,58 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes'
         }).then((result) => {
-            if (result.value) {
+           
                 swal(
                     'Updated!',
                     'Event has been updated.',
                     'success'
                 )
 
-                //update event date
-            }
+                var $calendar = $('#fullCalendar');
+
+                var times = event.recur==false ? 1 : event.annually==true ? 3 : event.monthly==true ? 6 : event.daily==true && 7;
+                
+                for (var i = 0; i < times; i++) {
+                    self.deleteEventList(event.id);
+                }
+                for (var i = 0; i < times; i++) {
+                    if(event.daily){
+                        var temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)) - event.order, parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)) - event.order, parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
+                    }else if(event.monthly){
+                        var temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1 - event.order, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1 - event.order, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
+                    }else if(event.annually){
+                        var temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)) - event.order, parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)) - event.order, parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
+                    }else{
+                        var temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
+                    }
+
+                    var customStart = temp.start;
+                    var customEnd = temp.end;
+                    
+
+                    var eventData = {
+                        id: event.id,        //same for recurring events
+                        staff: event.staff,
+                        title: event.title,
+                        note: event.note,
+                        start: customStart,
+                        end: customEnd,
+                        className: event.className,     //color of the event (azure for annually)
+                        // url:         //link can be added
+                        recur: event.recur,
+                        daily: event.daily,
+                        monthly: event.monthly,
+                        annually: event.annually,
+                        order:i
+                    };
+
+                    self.addEventList(eventData);
+
+                    // console.log(eventData);     //DEBUG
+                }
+                console.log(this.eventList);
+
+            
         }, function (dismiss) {
             if (dismiss === 'cancel') {
                 func();
