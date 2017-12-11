@@ -26,112 +26,137 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     m = this.today.getMonth();
     d = this.today.getDate();
 
-    eventList = [
+    eventListlink = 'http://testingtesttest.000webhostapp.com/eventList.php';
+    public eventList = [];
+    public businessHours = [ // specify an array instead
         {
-            id: 101,
-            title: 'All Day Event',
-            start: new Date(this.y, this.m, 1, 0, 0),
-            end: new Date(this.y, this.m, 1, 23, 59),
-            className: 'event-default',
-            recur: false,
-            daily: false,
-            monthly: false,
-            annually:false
-        },
-        {
-            id: 999,
-            title: 'Repeating Event',
-            start: new Date(this.y, this.m,this.d - 4, 6, 0),
-            end: new Date(this.y, this.m, this.d - 4, 8, 0),
-            allDay: false,
-            className: 'event-rose',
-            recur: true,
-            daily: true,
-            monthly: false,
-            annually:false,
-            order:0
-        },
-        {
-            id: 999,
-            title: 'Repeating Event',
-            start: new Date(this.y, this.m, this.d - 3, 6, 0),
-            end: new Date(this.y, this.m, this.d - 3, 8, 0),
-            allDay: false,
-            className: 'event-rose',
-            recur: true,
-            daily: true,
-            monthly: false,
-            annually:false,
-            order:1
-        },
-        {
-            id: 999,
-            title: 'Repeating Event',
-            start: new Date(this.y, this.m, this.d - 2, 6, 0),
-            end: new Date(this.y, this.m, this.d - 2, 8, 0),
-            allDay: false,
-            className: 'event-rose',
-            recur: true,
-            daily: true,
-            monthly: false,
-            annually:false,
-            order:2
-        },
-        {
-            id: 999,
-            title: 'Repeating Event',
-            start: new Date(this.y, this.m, this.d - 1, 6, 0),
-            end: new Date(this.y, this.m, this.d - 1, 8, 0),
-            allDay: false,
-            className: 'event-rose',
-            recur: true,
-            daily: true,
-            monthly: false,
-            annually:false,
-            order:3
-        },
-        {
-            id: 301,
-            title: 'Meeting',
-            start: new Date(this.y, this.m, this.d - 1, 10, 30),
-            end: new Date(this.y, this.m, this.d-1,11,0),
-            allDay: false,
-            className: 'event-green',
-            recur: false,
-            daily: false,
-            monthly: false,
-            annually: false
-        },
-        {
-            id: 201,
-            title: 'Lunch',
-            start: new Date(this.y, this.m, this.d + 7, 12, 0),
-            end: new Date(this.y, this.m, this.d + 7, 14, 0),
-            allDay: false,
-            className: 'event-red',
-            recur: false,
-            daily: false,
-            monthly: false,
-            annually: false
-        },
-        {
-            id: 501,
-            title: 'Birthday Party',
-            start: new Date(this.y, this.m, this.d + 1, 19, 0),
-            end: new Date(this.y, this.m, this.d + 1, 22, 30),
-            allDay: false,
-            className: 'event-azure',
-            recur: false,
-            daily: false,
-            monthly: false,
-            annually: false
+            dow: [1, 2, 3, 4, 5], // Monday, Tuesday, Wednesday, Thursday, Friday
+            start: '08:00', // 8am
+            end: '18:00' // 6pm
         }
     ];
+    // public breakTime = [ // specify an array instead
+    //     {
+    //         dow: [1, 2, 3, 4, 5], // Monday, Tuesday, Wednesday, Thursday, Friday
+    //         start: '12:00',
+    //         end: '13:30'
+    //     }
+    // ];
+    // ============testing events====================
+    // eventList = [
+
+    //     {
+    //         id: 101,
+    //         staff: 'Tania Andrew',
+    //         title: 'All Day Event',
+    //         note: '',
+    //         start: new Date(this.y, this.m, 1, 0, 0),
+    //         end: new Date(this.y, this.m, 1, 23, 59),
+    //         className: 'event-default',
+    //         recur: false,
+    //         daily: false,
+    //         monthly: false,
+    //         annually:false,
+    //         order:0
+    //     },
+    //     {
+    //         id: 999,
+    //         staff: 'Tania Andrew',
+    //         title: 'Repeating Event',
+    //         note: '',
+    //         start: new Date(this.y, this.m,this.d - 4, 6, 0),
+    //         end: new Date(this.y, this.m, this.d - 4, 8, 0),
+    //         allDay: false,
+    //         className: 'event-rose',
+    //         recur: true,
+    //         daily: true,
+    //         monthly: false,
+    //         annually:false,
+    //         order:0
+    //     },
+    //     {
+    //         id: 999,
+    //         staff: 'Tania Andrew',
+    //         title: 'Repeating Event',
+    //         note: '',
+    //         start: new Date(this.y, this.m, this.d - 3, 6, 0),
+    //         end: new Date(this.y, this.m, this.d - 3, 8, 0),
+    //         allDay: false,
+    //         className: 'event-rose',
+    //         recur: true,
+    //         daily: true,
+    //         monthly: false,
+    //         annually:false,
+    //         order:1
+    //     },
+    //     {
+    //         id: 999,
+    //         staff: 'Tania Andrew',
+    //         title: 'Repeating Event',
+    //         note: '',
+    //         start: new Date(this.y, this.m, this.d - 2, 6, 0),
+    //         end: new Date(this.y, this.m, this.d - 2, 8, 0),
+    //         allDay: false,
+    //         className: 'event-rose',
+    //         recur: true,
+    //         daily: true,
+    //         monthly: false,
+    //         annually:false,
+    //         order:2
+    //     },
+    //     {
+    //         id: 999,
+    //         staff: 'Tania Andrew',
+    //         title: 'Repeating Event',
+    //         note: '',
+    //         start: new Date(this.y, this.m, this.d - 1, 6, 0),
+    //         end: new Date(this.y, this.m, this.d - 1, 8, 0),
+    //         allDay: false,
+    //         className: 'event-rose',
+    //         recur: true,
+    //         daily: true,
+    //         monthly: false,
+    //         annually:false,
+    //         order:3
+    //     },
+    //     {
+    //         id: 201,
+    //         staff: 'Tania Andrew',
+    //         title: 'Lunch',
+    //         note: '',
+    //         start: new Date(this.y, this.m, this.d + 7, 12, 0),
+    //         end: new Date(this.y, this.m, this.d + 7, 14, 0),
+    //         allDay: false,
+    //         className: 'event-red',
+    //         recur: false,
+    //         daily: false,
+    //         monthly: false,
+    //         annually: false,
+    //         order:0
+    //     },
+    //     {
+    //         id: 501,
+    //         staff: 'Tania Andrew',
+    //         title: 'Birthday Party',
+    //         note: '',
+    //         start: new Date(this.y, this.m, this.d + 1, 19, 0),
+    //         end: new Date(this.y, this.m, this.d + 1, 22, 30),
+    //         allDay: false,
+    //         className: 'event-azure',
+    //         recur: false,
+    //         daily: false,
+    //         monthly: false,
+    //         annually: false,
+    //         order:0
+    //     }
+    // ];
 
     public JohnList =
     [{
         id: 601,
+        staff: 'John',
         title: 'Testing other user view',
+        note: '',
         start: new Date(this.y, this.m, this.d + 2, 19, 0),
         end: new Date(this.y, this.m, this.d + 2, 22, 30),
         allDay: false,
@@ -142,7 +167,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         annually: false
     }, {
         id: 601,
+        staff: 'John',
         title: 'Testing other user view',
+        note: '',
         start: new Date(this.y, this.m, this.d + 3, 19, 0),
         end: new Date(this.y, this.m, this.d + 3, 22, 30),
         allDay: false,
@@ -153,7 +180,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         annually: false
     }, {
         id: 601,
+        staff: 'John',
         title: 'Testing other user view',
+        note: '',
         start: new Date(this.y, this.m, this.d + 4, 19, 0),
         end: new Date(this.y, this.m, this.d + 4, 22, 30),
         allDay: false,
@@ -167,7 +196,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     public MaryList =
     [{
         id: 601,
+        staff: 'Mary',
         title: 'Testing other user view',
+        note: '',
         start: new Date(this.y, this.m, this.d + 2, 19, 0),
         end: new Date(this.y, this.m, this.d + 2, 22, 30),
         allDay: false,
@@ -178,7 +209,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         annually: false
     }, {
         id: 601,
+        staff: 'Mary',
         title: 'Testing other user view',
+        note: '',
         start: new Date(this.y, this.m, this.d + 3, 19, 0),
         end: new Date(this.y, this.m, this.d + 3, 22, 30),
         allDay: false,
@@ -189,7 +222,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         annually:false
     }, {
         id: 601,
+        staff: 'Mary',
         title: 'Testing other user view',
+        note: '',
         start: new Date(this.y, this.m, this.d + 4, 19, 0),
         end: new Date(this.y, this.m, this.d + 4, 22, 30),
         allDay: false,
@@ -200,7 +235,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         annually:false
     }];
 
-    selectedUsers: string[];
+    // ==========end of testing events==================
+
+    selectedUsers: string[];        //users'views
 
     selectTheme = 'primary';
     users = [
@@ -210,6 +247,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     ];
 
     ngOnInit() {
+
         const $calendar = $('#fullCalendar');
         const adminName = 'Tania Andrew';
 
@@ -221,6 +259,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         const fiveYearsAfter = y + 5;
         const fiveYearsBefore = y - 5;
 
+        
         $calendar.fullCalendar({
             viewRender: function(view: any, element: any) {
                 // We make sure that we activate the perfect scrollbar when the view isn't on Month
@@ -249,13 +288,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     titleFormat: 'D MMM, YYYY'
                 }
             }, 
-            businessHours: [ // specify an array instead
-                {
-                    dow: [1, 2, 3, 4, 5], // Monday, Tuesday, Wednesday, Thursday, Friday
-                    start: '08:00', // 8am
-                    end: '18:00' // 6pm
-                }
-            ],
+            businessHours: this.businessHours,
+            eventConstraint: "businessHours",
 
             select: (start: any, end: any)=> {
                 var self = this;
@@ -334,8 +368,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                                     note: note,
                                     start: customStart,
                                     end: customEnd,
-                                    className: customClass,     //color of the event (azure for annually)
-                                    // url:         //link can be added
+                                    className: customClass,     //color of the event (once:green, daily:azure,monthly:orange,annually:red)
                                     recur:r,
                                     daily:d,
                                     monthly:m,
@@ -343,8 +376,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                                     order: i
                                 };
 
-                                console.log(eventData);
-                                self.addEventList(eventData);
+                                self.eventList.push(eventData);
 
                                 // console.log(eventData);     //DEBUG
                                 $calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
@@ -374,9 +406,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
 
             // color classes: [ event-blue | event-azure | event-green | event-orange | event-red ]
-            events: this.eventList,
+            events: this.loadEventList(),
             eventClick: (event:any)=> {      //event on click swal edit or remove
-                // console.log(event);     //DEBUG
                 var self = this;
                 var temp = self.loadRecur(event.id);
                 
@@ -438,12 +469,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                                     break;
                                 }
                             }
-                            console.log(start.getMonth());
-                            console.log(end);
-                            for(var i = 0; i < times; i ++){
-                                self.deleteEventList(event.id);
+                            self.deleteEventList(event.id);
                                 
-                            }
                             $calendar.fullCalendar('removeEvents', event.id);
                             
                             for (var i = 0; i < times; i++) {
@@ -463,8 +490,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                                     note: note,
                                     start: customStart,
                                     end: customEnd,
-                                    className: customClass,     //color of the event (azure for annually)
-                                    // url:         //link can be added
+                                    className: customClass,     //color of the event (once:green, daily:azure,monthly:orange,annually:red)
                                     recur: r,
                                     daily: d,
                                     monthly: m,
@@ -472,12 +498,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                                     order:i
                                 };
 
-                                self.addEventList(eventData);
+                                self.eventList.push(eventData);
                                 // console.log(eventData);     //DEBUG
+                                
                                 $calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
                                 $calendar.fullCalendar('addEventSource', eventData);
                             }
-
+                            // console.log(self.eventList);        //DEBUG
                         } else {
                             swal(
                                 "Failed to edit event",
@@ -492,25 +519,21 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     
                     if (dismiss === 'cancel') {
                         // delete this event
-                        console.log('should delete event');     //DEBUG
                         $calendar.fullCalendar('removeEvents', event.id);        //some idOrFilter to be removed
                         self.deleteEventList(event.id);
+                        // console.log(self.eventList);        //DEBUG
                     }
                 });
 
-                if (event.url) {
-                    window.open(event.url);
-                    return false;
-                }
             },
             eventDrop:  (event, delta, revertFunc)=> {
                 var self = this;
-                self.customMessagePopUp(revertFunc, event.title + " was dropped on " + event.start.format(), event);
+                self.customMessagePopUp(revertFunc, event.title + " was dropped on " + event.start.format("YYYY-MM-DD"), event);
 
             },
             eventResize:  (event, delta, revertFunc)=> {
                 var self = this;
-                self.customMessagePopUp(revertFunc, event.title + " end is now " + event.end.format(), event);
+                self.customMessagePopUp(revertFunc, event.title + " end is now " + event.end.format("HH:mm"), event);
 
             }
 
@@ -534,6 +557,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         }
         // console.log(renderList);         //DEBUG
         $('#fullCalendar').fullCalendar('removeEvents');
+        // $('#fullCalendar').fullCalendar('renderEvent', renderList,true);         //doesn't work
         $('#fullCalendar').fullCalendar('addEventSource', renderList);
     }
 
@@ -541,7 +565,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         var obj:any;
         for (var i = 0; i < this.eventList.length; i++) {
             if (this.eventList[i].id == id) {
-                //         console.log(this.eventList[i]['recur']);
                 if (this.eventList[i]['recur']) {
                     obj = this.eventList[i]['daily'] ? { recur: 'checked', annually: '', monthly: '', daily: 'checked' } : this.eventList[i]['monthly'] ? { recur: 'checked', annually: '', monthly: 'checked', daily: '' } : { recur: 'checked', annually: 'checked', monthly: '', daily: '' }
                     
@@ -550,18 +573,14 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 }
                 return obj;
             }
-            // index = this.eventList[i].id == id&& i;
         }
-    }
-
-    addEventList(eventData){
-        this.eventList.push(eventData);
     }
 
     deleteEventList(id){
         for (var i = 0; i < this.eventList.length; i++) {
-            if (this.eventList[i].id == id) {
+            if (this.eventList[i].id === id) {
                 this.eventList.splice(i, 1);
+                i--;
             }
         }
     }
@@ -574,11 +593,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         var d = false;
         var m = false;
         var a = false;
-        console.log(sy);
-        console.log(sm);
-        console.log(sd);
-        console.log(sh);
-        console.log(smin);
+       
         if (times == 1) {
             customStart = new Date(sy, sm, sd, sh, smin);
             customEnd = new Date(ey, em, ed, eh, emin);
@@ -602,8 +617,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             r = true;
             d = true;
         }
-        console.log(customStart);
-        console.log({ start: customStart, end: customEnd });        //DEBUG
+        
+        // console.log({ start: customStart, end: customEnd });        //DEBUG
         return {start:customStart,end:customEnd,class:customClass,recur:r,daily:d,monthly:m,annually:a};
 
     }
@@ -631,18 +646,18 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
                 var times = event.recur==false ? 1 : event.annually==true ? 3 : event.monthly==true ? 6 : event.daily==true && 7;
                 
-                for (var i = 0; i < times; i++) {
-                    self.deleteEventList(event.id);
-                }
+                self.deleteEventList(event.id);
+
+                var temp;
                 for (var i = 0; i < times; i++) {
                     if(event.daily){
-                        var temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)) - event.order, parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)) - event.order, parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
+                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)) - event.order, parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)) - event.order, parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
                     }else if(event.monthly){
-                        var temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1 - event.order, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1 - event.order, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
+                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1 - event.order, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1 - event.order, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
                     }else if(event.annually){
-                        var temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)) - event.order, parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)) - event.order, parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
+                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)) - event.order, parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)) - event.order, parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
                     }else{
-                        var temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
+                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
                     }
 
                     var customStart = temp.start;
@@ -656,8 +671,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                         note: event.note,
                         start: customStart,
                         end: customEnd,
-                        className: event.className,     //color of the event (azure for annually)
-                        // url:         //link can be added
+                        className: event.className,     //color of the event (once:green, daily:azure,monthly:orange,annually:red)
                         recur: event.recur,
                         daily: event.daily,
                         monthly: event.monthly,
@@ -665,12 +679,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                         order:i
                     };
 
-                    self.addEventList(eventData);
+                    self.eventList.push(eventData);
 
                     // console.log(eventData);     //DEBUG
                 }
-                console.log(this.eventList);
-
+                // console.log(this.eventList);        //DEBUG
             
         }, function (dismiss) {
             if (dismiss === 'cancel') {
@@ -679,6 +692,25 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         })
     }
 
-    
+    loadEventList(){
+        var $calendar = $('#fullCalendar');
+        this.appService.getJson(this.eventListlink).then((data) => {
+            this.eventList = data;
+            for (var i = 0; i < this.eventList.length; i++) {            //"2017-11-18T18:00:00"
+                // DEBUG
+                // console.log(this.eventList[i].start.substring(0, 4));        //year
+                // console.log(this.eventList[i].start.substring(5, 7));        //month need to -1  in json
+                // console.log(this.eventList[i].start.substring(8, 10));       //day
+                var tempstart = new Date(parseInt(this.eventList[i].start.substring(0, 4)), parseInt(this.eventList[i].start.substring(5, 7)), parseInt(this.eventList[i].start.substring(8, 10)), parseInt(this.eventList[i].start.substring(11, 13)), parseInt(this.eventList[i].start.substring(14, 16)));
+                var tempend = new Date(parseInt(this.eventList[i].end.substring(0, 4)), parseInt(this.eventList[i].end.substring(5, 7)), parseInt(this.eventList[i].end.substring(8, 10)), parseInt(this.eventList[i].end.substring(11, 13)), parseInt(this.eventList[i].end.substring(14, 16)));
+                this.eventList[i].start = tempstart;
+                this.eventList[i].end = tempend;
+               
+            }
+            
+            return this.eventList;
+        });
+
+    }
    
  }
