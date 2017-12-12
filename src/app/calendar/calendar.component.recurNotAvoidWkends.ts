@@ -457,10 +457,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                    
                             var times = recur != 'on'? 1 : freq == 'annually'? 3: freq == 'monthly'? 6 : freq == 'daily' && 7;
                             var randomId = Math.floor(Math.random() * 1000);
-                            var k = 0; 
                             for(var i = 0; i < times; i ++){
 
-                                var temp = self.custStartCustEnd(parseInt(dateFrom.substring(0, 4)), parseInt(dateFrom.substring(5, 7)) - 1, parseInt(dateFrom.substring(8, 10)), timeFromHour, timeFromMin, parseInt(dateTo.substring(0, 4)), parseInt(dateTo.substring(5, 7)) - 1, parseInt(dateTo.substring(8, 10)), parseInt(timeTo.substring(0, 2)), parseInt(timeTo.substring(3, 5)), times, i,k);
+                                var temp = self.custStartCustEnd(parseInt(dateFrom.substring(0, 4)), parseInt(dateFrom.substring(5, 7)) - 1, parseInt(dateFrom.substring(8, 10)), timeFromHour, timeFromMin, parseInt(dateTo.substring(0, 4)), parseInt(dateTo.substring(5, 7)) - 1, parseInt(dateTo.substring(8, 10)), parseInt(timeTo.substring(0, 2)), parseInt(timeTo.substring(3, 5)), times, i);
                                 
                                 var customStart = temp.start;
                                 var customEnd = temp.end;
@@ -469,8 +468,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                                 var d = temp.daily;
                                 var m = temp.monthly;
                                 var a = temp.annually;
-                                k = temp.K;
-                                console.log(k);
 
                                 eventData = {
                                     id: randomId,        //same for recurring events
@@ -671,9 +668,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                             self.deleteEventList(event.id);
                                 
                             $calendar.fullCalendar('removeEvents', event.id);
-                            var k = 0;
+                            
                             for (var i = 0; i < times; i++) {
-                                var temp = self.custStartCustEnd(start.getFullYear(), start.getMonth(), start.getDate(), timeFrom.substring(0, 2), timeFrom.substring(3, 5), end.getFullYear(), end.getMonth(), end.getDate(), timeTo.substring(0, 2), timeTo.substring(3, 5),times,i, k);
+                                var temp = self.custStartCustEnd(start.getFullYear(), start.getMonth(), start.getDate(), timeFrom.substring(0, 2), timeFrom.substring(3, 5), end.getFullYear(), end.getMonth(), end.getDate(), timeTo.substring(0, 2), timeTo.substring(3, 5),times,i);
                                 var customStart = temp.start;
                                 var customEnd = temp.end;
                                 var customClass = temp.class;
@@ -681,7 +678,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                                 var d = temp.daily;
                                 var m = temp.monthly;
                                 var a = temp.annually;
-                                k = temp.K;
 
                                 eventData = {
                                     id: event.id,        //same for recurring events
@@ -788,7 +784,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         }
     }
 
-    custStartCustEnd(sy,sm,sd,sh,smin,ey,em,ed,eh,emin,times,i,k){
+    custStartCustEnd(sy,sm,sd,sh,smin,ey,em,ed,eh,emin,times,i){
         var customStart;
         var customEnd;
         var customClass;
@@ -807,45 +803,22 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             customClass = 'event-red';
             r = true;
             a = true;
-           
-            while(this.workdays.indexOf(customStart.getDay()) == -1){
-                customStart = new Date(sy + i, sm, sd+k, sh, smin);
-                customEnd = new Date(ey + i, em, ed+k, eh, emin);
-                k++;
-            }
-            k=0;
         } else if (times == 6) {
             customStart = new Date(sy, sm+i, sd, sh, smin);
             customEnd = new Date(ey, em+i, ed, eh, emin);
             customClass = 'event-orange';
             r = true;
             m = true;
-           
-            while (this.workdays.indexOf(customStart.getDay()) == -1) {
-                customStart = new Date(sy, sm + i, sd+k, sh, smin);
-                customEnd = new Date(ey, em + i, ed+k, eh, emin);
-                k++;
-            }
-            k = 0;
         } else if (times == 7) {
-            customStart = new Date(sy, sm, sd+i+k, sh, smin);
-            customEnd = new Date(ey, em, ed+i+k, eh, emin);
+            customStart = new Date(sy, sm, sd+i, sh, smin);
+            customEnd = new Date(ey, em, ed+i, eh, emin);
             customClass = 'event-azure';
             r = true;
             d = true;
-            console.log('day' + customStart.getDay());
-            while (this.workdays.indexOf(customStart.getDay()) == -1) {
-                k++;
-                customStart = new Date(sy, sm, sd + i + k, sh, smin);
-                customEnd = new Date(ey, em, ed + i + k, eh, emin);
-                
-                console.log(customStart);
-                console.log('loop' + k);
-            }
         }
         
         // console.log({ start: customStart, end: customEnd });        //DEBUG
-        return {start:customStart,end:customEnd,class:customClass,recur:r,daily:d,monthly:m,annually:a,K:k};
+        return {start:customStart,end:customEnd,class:customClass,recur:r,daily:d,monthly:m,annually:a};
 
     }
 
@@ -875,21 +848,19 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 self.deleteEventList(event.id);
 
                 var temp;
-                var k = 0;
                 for (var i = 0; i < times; i++) {
                     if(event.daily){
-                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)) - event.order, parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)) - event.order, parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i,k);
+                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)) - event.order, parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)) - event.order, parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
                     }else if(event.monthly){
-                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1 - event.order, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1 - event.order, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i,k);
+                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1 - event.order, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1 - event.order, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
                     }else if(event.annually){
-                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)) - event.order, parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)) - event.order, parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i,k);
+                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)) - event.order, parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)) - event.order, parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
                     }else{
-                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i,k);
+                        temp = self.custStartCustEnd(parseInt(event.start.format().substring(0, 4)), parseInt(event.start.format().substring(5, 7)) - 1, parseInt(event.start.format().substring(8, 10)), parseInt(event.start.format().substring(11, 13)), parseInt(event.start.format().substring(14, 16)), parseInt(event.end.format().substring(0, 4)), parseInt(event.end.format().substring(5, 7)) - 1, parseInt(event.end.format().substring(8, 10)), parseInt(event.end.format().substring(11, 13)), parseInt(event.end.format().substring(14, 16)), times, i);
                     }
 
                     var customStart = temp.start;
                     var customEnd = temp.end;
-                    k = temp.K;
                     
 
                     var eventData = {
