@@ -1,0 +1,50 @@
+
+
+        <!-- <div class="logo">
+            <div class="logo-normal">
+                <a href="https://www.creative-tim.com" class="simple-text">
+                    Creative Tim
+                </a>
+            </div>
+
+            <div class="logo-img">
+                <img src="/assets/img/angular2-logo-white.png"/>
+            </div>
+        </div> -->
+
+
+        <div class="sidebar-wrapper">
+
+            <div class="user">
+                <!-- <div class="photo">
+                    <img src="../assets/img/faces/avatar.jpg" />
+                </div> -->
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group form-search is-empty">
+                        <input class="form-control" placeholder="Search" type="text">
+                        <span class="material-input"></span>
+                        <span class="material-input"></span>
+                    </div>
+                    <button class="btn btn-white btn-round btn-just-icon" type="submit">
+                        <i class="material-icons">search</i>
+                        <div class="ripple-container"></div>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="nav-container">
+                <ul class="nav">
+                    <li routerLinkActive="active" *ngFor="let menuitem of menuItems">
+                        <!--If is a single link-->
+                        <!-- <a [routerLink]="[menuitem.path]" *ngIf="menuitem.type === 'link'">
+                            <i class="material-icons">{{menuitem.icontype}}</i>
+                            <p>{{menuitem.title}}</p>
+                        </a> -->
+                        <a (click)="displayCustomer(menuitem.title)">{{menuitem.title}}</a>
+                       
+                    </li>
+                   
+                </ul>
+            </div>
+
+        </div>

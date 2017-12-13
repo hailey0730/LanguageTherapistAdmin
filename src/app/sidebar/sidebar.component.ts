@@ -91,6 +91,12 @@ export const ROUTES: RouteInfo[] = [
         type: 'link',
         icontype: 'date_range'
     },
+    {
+        path: '/customer',
+        title: 'Customer',
+        type: 'link',
+        icontype: 'person'
+    },
     // {
     //     path: '/pages',
     //     title: 'Pages',
