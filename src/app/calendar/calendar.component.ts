@@ -899,5 +899,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
         }           //end of for workingHours
     }
+
+    testing(){
+        console.log('getting from another class');
+    }
    
  }

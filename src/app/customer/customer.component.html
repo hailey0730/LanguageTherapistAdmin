@@ -6,28 +6,43 @@
                 <!-- <div class="photo">
                             <img src="../assets/img/faces/avatar.jpg" />
                         </div> -->
-                <form role="search" style="margin:0 1.5em;">
-                    <div class="form-group form-search is-empty" style="display:inline-block;">
+                <form role="search">
+                    <div class="form-group form-search is-empty">
                         <input class="form-control" placeholder="Search" type="text">
                         <span class="material-input"></span>
                         <span class="material-input"></span>
                     </div>
-                    <button class="btn btn-white btn-round btn-just-icon" type="submit">
+                    <!-- <button class="btn btn-white btn-round btn-just-icon" type="submit">
                         <i class="material-icons">search</i>
                         <div class="ripple-container"></div>
+                    </button> -->
+                    <button type="button" rel="tooltip" title="Search" class="btn btn-danger btn-simple btn-xs">
+                        <i class="material-icons">search</i>
+                    </button>
+                    <button type="button" rel="tooltip" title="Add" class="btn btn-danger btn-simple btn-xs" (click)="addCustomer()">
+                        <i class="material-icons">add</i>
                     </button>
                 </form>
             </div>
         
             <div class="nav-container">
                 <ul class="nav">
-                    <li *ngFor="let menuitem of menuItems">
+                   
+                    <li *ngFor="let cust of customers; let i = index;" id="{{ 'subsidebar-' + i }}">
                         <!--If is a single link-->
                         <!-- <a [routerLink]="[menuitem.path]" *ngIf="menuitem.type === 'link'">
                                     <i class="material-icons">{{menuitem.icontype}}</i>
                                     <p>{{menuitem.title}}</p>
                                 </a> -->
-                        <a (click)="displayCustomer(menuitem)">{{menuitem}}</a>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="optionsCheckboxes">
+                                    </label>
+                                </div>
+                        <a class="customerName" (click)="displayCustomer($event, cust.id)">{{cust.name}}</a>
+                        <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs" (click)="removeCust($event, cust.id)">
+                            <i class="material-icons">delete</i>
+                        </button>
         
                     </li>
         
@@ -43,15 +58,16 @@
     
                 <div class="col-md-12">
                     <div class="card">
+                        <div class="row">
+                            <div class="col-md-4">
                         <div class="card card-profile">
-    
                             <div id="picDiv" class="fileinput text-center" data-provides="fileinput">
-                                <ng-container *ngIf="admin!= null;">
+                                <ng-container *ngIf="displayCust!= null;">
                                     <div class="fileinput-new thumbnail img-circle">
                                         <img src="../../assets/img/placeholder.jpg" alt="...">
                                     </div>
                                     <div class="fileinput-exists thumbnail img-circle">
-                                        <img src="{{admin[0]}}" alt="...">
+                                        <img src="{{displayCust.img}}" alt="...">
                                     </div>
                                     <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
                                     <div>
@@ -65,85 +81,208 @@
                                     </div>
                                 </ng-container>
                             </div>
-    
                         </div>
+
                         <div class="card-content">
-                            <h4 class="card-title">Account Profile
-                                 <small class="category">Complete your profile</small> 
-                         </h4>
-                            <form *ngIf="admin != null;">
+                            <form *ngIf="displayCust != null;">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group label-floating">
-                                            <label class="control-label">First Name</label>
-                                            <input type="text" class="form-control" id="fn" value="{{admin[1]}}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group label-floating">
-                                            <label class="control-label">Last Name</label>
-                                            <input type="text" class="form-control" id="ln" value="{{admin[2]}}">
-                                        </div>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Name</label>
+                                        <input type="text" class="form-control" id="name" value="{{displayCust.name}}">
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
                                         <div class="form-group label-floating">
                                             <label class="control-label">Phone</label>
-                                            <input type="text" class="form-control" id="phone" value="{{admin[3]}}">
+                                            <input type="text" class="form-control" id="phone" value="{{displayCust.phone}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="row">
                                         <div class="form-group label-floating">
                                             <label class="control-label">Mobile</label>
-                                            <input type="text" class="form-control" id="mobile" value="{{admin[4]}}">
+                                            <input type="text" class="form-control" id="mobile" value="{{displayCust.mobile}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="row">
                                         <div class="form-group label-floating">
                                             <label class="control-label">Email</label>
-                                            <input type="email" class="form-control" id="email" value="{{admin[5]}}">
+                                            <input type="email" class="form-control" id="email" value="{{displayCust.email}}">
                                         </div>
                                     </div>
-                                </div>
     
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group label-floating">
-                                            <label class="control-label">Address</label>
-                                            <input type="text" class="form-control" id="addr" value="{{admin[6]}}">
-                                        </div>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Address</label>
+                                        <input type="text" class="form-control" id="addr" value="{{displayCust.address}}">
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group label-floating">
                                             <label class="control-label">City</label>
-                                            <input type="text" class="form-control" id="city" value="{{admin[7]}}">
+                                            <input type="text" class="form-control" id="city" value="{{displayCust.city}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group label-floating">
                                             <label class="control-label">Country</label>
-                                            <input type="text" class="form-control" id="country" value="{{admin[8]}}">
+                                            <input type="text" class="form-control" id="country" value="{{displayCust.country}}">
                                         </div>
                                     </div>
-                                    
                              </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Staff description</label>
-                                            <div class="form-group label-floating">
-                                                <label class="control-label"></label>
-                                                <textarea class="form-control" rows="5">{{admin[9]}}</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <button type="submit" class="btn btn-rose pull-right" (click)="update()">Update Profile</button>
                                 <div class="clearfix"></div>
                             </form>
+                        </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header card-header-tabs" data-background-color="red">
+                                    <div class="nav-tabs-navigation">
+                                        <div class="nav-tabs-wrapper">
+                                            <ul class="nav nav-tabs" data-tabs="tabs">
+                                                <li class="active">
+                                                    <a href="#apt" data-toggle="tab">
+                                                        <i class="material-icons">date_range</i> Appointment
+                                                        <div class="ripple-container"></div>
+                                                    </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#note" data-toggle="tab">
+                                                        <i class="material-icons">note</i> Note
+                                                        <div class="ripple-container"></div>
+                                                    </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#stats" data-toggle="tab">
+                                                        <i class="material-icons">assessment</i> Stats
+                                                        <div class="ripple-container"></div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="apt">
+                                            <table class="table" *ngIf="displayCust != null;">
+                                                <tbody>
+                                                     <tr>
+                                                        <td>
+                                                            <button type="button" rel="tooltip" title="Add" class="btn btn-red btn-round btn-just-icon" (click)="addApt()">
+                                                                <i class="material-icons">add</i>
+                                                            </button>
+                                                        </td>
+                                                        <td>{{appointments.length}} Appointment</td>
+                                                        <td>$$$</td>
+                                                    </tr>
+                                                    <!--<tr>
+                                                        <td>testing</td>
+                                                        <td>testing2</td>
+                                                    </tr> -->
+                                                    <tr class="clickable" *ngFor="let apt of appointments" (click)="viewApt(apt.id)">
+                                                        <td>
+                                                            <i class="material-icons">date_range</i>
+                                                        </td>
+                                                        <td>
+                                                            <div>{{apt.date}} {{apt.time}}</div>
+                                                            <div>{{apt.customer}} {{apt.title}} {{apt.duration}} {{apt.cost}}</div>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane" id="note">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr *ngFor="let apt of appointments">
+                                                        <td>{{apt.note}}</td>
+                                                    </tr>
+                                                    <!-- <tr *ngFor="let row of tasks2">
+                                                        <td>
+                                                            <div [ngSwitch]="row.checked">
+                                                                <div *ngSwitchCase="true">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox" name="optionsCheckboxes" checked>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div *ngSwitchDefault>
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox" name="optionsCheckboxes">
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                                                        </td>
+                                                        <td>{{row.title}}</td>
+                                                        <td class="td-actions text-right">
+                                                            <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-simple btn-xs">
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
+                                                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                                                <i class="material-icons">close</i>
+                                                            </button>
+                                                        </td>
+                                                    </tr> -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane" id="stats">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>testing</td>
+                                                        <td>testing1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>testing</td>
+                                                        <td>testing2</td>
+                                                    </tr>
+                                                    <!-- <tr *ngFor="let row of tasks3">
+                                                        <td>
+                                                            <div [ngSwitch]="row.checked">
+                                                                <div *ngSwitchCase="true">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox" name="optionsCheckboxes" checked>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div *ngSwitchDefault>
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox" name="optionsCheckboxes">
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                                                        </td>
+                                                        <td>{{row.title}}</td>
+                                                        <td class="td-actions text-right">
+                                                            <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-simple btn-xs">
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
+                                                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs">
+                                                                <i class="material-icons">close</i>
+                                                            </button>
+                                                        </td>
+                                                    </tr> -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         </div>
                     </div>
                 </div>

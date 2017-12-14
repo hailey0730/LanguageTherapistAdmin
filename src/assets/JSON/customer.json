@@ -1,0 +1,142 @@
+[
+  {
+      "id":"101",
+    "img":"../assets/img/faces/avatar.jpg",
+    "name":"Customer A",
+    "phone":"bd546139",
+    "mobile":"66443347",
+    "email":"hayhay0730@gmail.com",
+    "address":"somewhere over the rainbow",
+    "city":"HK",
+    "country":"China",
+    "appointments":[
+            
+            {
+                "id":101,
+                "staff": "Tania Andrew",
+                "title": "some service1",
+                "note": "",
+                "start":"2017-11-14T15:00:00",
+                "end":"2017-11-14T15:30:00",
+                "date": "Thu 14 Dec 2017",
+                "time": "03:00pm - 03:30pm",
+                "customer": "Customer A",
+                
+                "duration": "30min",
+                "cost": "$150",
+                "recur": false,
+                "daily": false,
+                "monthly": false,
+                "annually": false,
+                "order": 0
+            },
+            {
+                "id":102,
+                "staff": "Tania Andrew",
+                "title": "some service2",
+                "note": "",
+                "start":"2017-11-14T17:00:00",
+                "end":"2017-11-14T18:00:00",
+                "date": "Thu 14 Dec 2017",
+                "time": "05:00pm - 06:00pm",
+                "customer": "Customer A",
+                
+                "duration": "60min",
+                "cost": "$300",
+                "recur": false,
+                "daily": false,
+                "monthly": false,
+                "annually": false,
+                "order": 0
+            }
+        ]
+    
+  },
+  {
+      "id":"102",
+    "img":"../assets/img/faces/card-profile1-square.jpg",
+    "name":"John",
+    "phone":"bd546139",
+    "mobile":"66443347",
+    "email":"hayhay0730@gmail.com",
+    "address":"somewhere over the rainbow",
+    "city":"HK",
+    "country":"China",
+    "appointments":[
+            
+            {
+                "id":103,
+                "staff": "other staff",
+                "title": "some service1",
+                "note": "",
+                "start":"2017-11-15T09:00:00",
+                "end":"2017-11-15T10:30:00",
+                "date": "Thu 15 Dec 2017",
+                "time": "09:00am - 10:30am",
+                "customer": "John",
+                
+                "duration": "30min",
+                "cost": "$150",
+                "recur": false,
+                "daily": false,
+                "monthly": false,
+                "annually": false,
+                "order": 0
+            },
+            {
+                "id":104,
+                "staff": "other staff2",
+                "title": "some service2",
+                "note": "",
+                "start":"2017-11-17T17:00:00",
+                "end":"2017-11-17T18:00:00",
+                "date": "Thu 17 Dec 2017",
+                "time": "05:00pm - 06:00pm",
+                "customer": "John",
+                
+                "duration": "60min",
+                "cost": "$300",
+                "recur": false,
+                "daily": false,
+                "monthly": false,
+                "annually": false,
+                "order": 0
+            }
+        ]
+    
+  },
+  {
+      "id":"103",
+    "img":"../assets/img/faces/card-profile2-square.jpg",
+    "name":"Bob",
+    "phone":"bd546139",
+    "mobile":"66443347",
+    "email":"hayhay0730@gmail.com",
+    "address":"somewhere over the rainbow",
+    "city":"HK",
+    "country":"China",
+    "appointments":[
+            
+            {
+                "id":103,
+                "staff": "other staff",
+                "title": "some service1",
+                "note": "",
+                "start":"2017-11-15T09:00:00",
+                "end":"2017-11-15T10:30:00",
+                "date": "Thu 15 Dec 2017",
+                "time": "09:00am - 10:30am",
+                "customer": "Bobz",
+                
+                "duration": "30min",
+                "cost": "$150",
+                "recur": false,
+                "daily": false,
+                "monthly": false,
+                "annually": false,
+                "order": 0
+            }
+        ]
+    
+  }
+]
