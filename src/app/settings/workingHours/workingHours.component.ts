@@ -14,7 +14,7 @@ declare const $: any;
 })
 export class WorkingHoursComponent implements OnInit, AfterViewInit {
     
-    public admin: any[];
+    public admin: any;
     public workingHr: any[] = [moment(new Date(0, 0, 0, 9, 30)).format("HH:mm"), moment(new Date(0, 0, 0, 18, 0)).format("HH:mm")];
     public weeks: any[] = [{day:'Monday',switch:true,from:this.workingHr[0], to:this.workingHr[1]},
         { day: 'Tuesday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
@@ -31,8 +31,19 @@ export class WorkingHoursComponent implements OnInit, AfterViewInit {
 
     public ngOnInit() {
        // set value of the input fields
-        this.admin = ["../assets/img/faces/avatar.jpg", "Tania", "Andrew", "bd546139", "66443347", "hayhay0730@gmail.com",
-            "somewhere over the rainbow", "HK", "China", "some description"];
+        this.admin = {
+            "id": 301,
+            "img": "../assets/img/faces/avatar.jpg",
+            "fn": "Tania",
+            "ln": "Andrew",
+            "phone": "bd546139",
+            "mobile": "66443347",
+            "email": "hayhay0730@gmail.com",
+            "address": "somewhere over the rainbow",
+            "city": "HK",
+            "country": "China",
+            "description": "some description"
+        };
 
         $("form").on('mouseover', '.row', function (event) {
             var weekday = $(event.target).children()[0];

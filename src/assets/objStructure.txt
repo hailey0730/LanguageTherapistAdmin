@@ -1,0 +1,82 @@
+staff:
+
+{
+	"id":301,
+    "img":"../assets/img/faces/avatar.jpg",
+    "fn":"Tania",
+    "ln": "Andrew",
+    "phone":"bd546139",
+    "mobile":"66443347",
+    "email":"hayhay0730@gmail.com",
+    "address":"somewhere over the rainbow",
+    "city":"HK",
+    "country":"China",
+    "description":"some description"
+}
+
+working hours:
+
+{
+	"id":301,"workingHours":
+	[{day:'Monday',switch:true,from:this.workingHr[0], to:this.workingHr[1]},
+	{ day: 'Tuesday', switch: true, from: "08:00", to: "18:00" },
+	{ day: 'Wednesday', switch: true, from: "08:00", to: "18:00" },
+	{ day: 'Thursday', switch: true, from: "08:00", to: "18:00" },
+	{ day: 'Friday', switch: true, from: "08:00", to: "18:00" },
+	{ day: 'Saturday', switch: false, from: "08:00", to: "18:00" },
+	{ day: 'Sunday', switch: false, from: "08:00", to: "18:00" }]
+}
+
+breaks: (may have multiple breaks)
+
+{
+	"id":301,"breaks":
+	[{ day: 'Monday', switch: true, durations: [{ from: "12:00", to: "13:30" }] },
+	{ day: 'Tuesday', switch: true, durations: [{ from: "12:00", to: "13:30" }]},
+	{ day: 'Wednesday', switch: true, durations: [{ from: "12:00", to: "13:30" }]},
+	{ day: 'Thursday', switch: true, durations: [{ from: "12:00", to: "13:30" }]},
+	{ day: 'Friday', switch: true, durations: [{ from: "12:00", to: "13:30" }]},
+	{ day: 'Saturday', switch: false, durations: [{ from: "12:00", to: "13:30" }]},
+	{ day: 'Sunday', switch: false, durations: [{ from: "12:00", to: "13:30" }]}]
+}
+
+
+
+event: (event id)	18attr
+
+{
+    "id": 101,
+    "staff": "Tania Andrew",
+    "title": "All Day Event",
+    "note": "",
+    "start": "2017-11-18T08:00:00",
+    "end": "2017-11-18T09:00:00",
+    "displayDate": "Mon 18 Dec 2017",
+    "displayTime": "08:00am - 09:00am",
+    "customer": "Customer A",
+    "duration": "60min",
+    "cost":300,
+    "className": "event-default",
+    "recur": false,
+    "daily": false,
+    "weekly":false,
+    "monthly": false,
+    "annually":false,
+    "order":0
+}
+
+
+customer: (customer id)
+
+{
+  	"id":201,
+    "img":"../assets/img/faces/avatar.jpg",
+    "name":"Customer A",
+    "phone":"bd546139",
+    "mobile":"66443347",
+    "email":"hayhay0730@gmail.com",
+    "address":"somewhere over the rainbow",
+    "city":"HK",
+    "country":"China"
+    
+  }       

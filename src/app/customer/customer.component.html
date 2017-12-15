@@ -176,7 +176,7 @@
                                                             </button>
                                                         </td>
                                                         <td>{{appointments.length}} Appointment</td>
-                                                        <td>$$$</td>
+                                                        <td>${{cost}}</td>
                                                     </tr>
                                                     <!--<tr>
                                                         <td>testing</td>
@@ -187,8 +187,8 @@
                                                             <i class="material-icons">date_range</i>
                                                         </td>
                                                         <td>
-                                                            <div>{{apt.date}} {{apt.time}}</div>
-                                                            <div>{{apt.customer}} {{apt.title}} {{apt.duration}} {{apt.cost}}</div>
+                                                            <div>{{apt.displayDate}} {{apt.displayTime}}</div>
+                                                            <div>{{apt.customer}} {{apt.title}} {{apt.duration}} ${{apt.cost}}</div>
                                                         </td>
                                                         
                                                     </tr>

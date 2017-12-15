@@ -1,9 +1,10 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { NgModel } from '@angular/forms';
+import * as moment from 'moment';
+// import 'moment/locale/pt-br';
 import * as Ps from 'perfect-scrollbar';
-
 import { appService } from '../app.service';
-
+import { Booking } from '../bookingSystem/booking';
 import { CalendarComponent } from '../calendar/calendar.component';
 declare const swal: any;
 declare const $: any;
@@ -13,17 +14,20 @@ declare const $: any;
     templateUrl: 'customer.component.html',
     styleUrls: ['./css/customer.css'],
     providers: [
-        appService, CalendarComponent
+        appService, Booking, CalendarComponent
     ]
 })
 
 export class CustomerComponent implements OnInit,AfterViewInit{
-    
+    adminName = "Tania Andrew";
+    fiveYearsBefore = 2017 - 5;
+    fiveYearsAfter = 2017 + 5;
     public customers: any[];        //customers info
     public displayCust:any;         //customer to be shown on right
-
+    public appointments: any;        //appointments to be shown on right
+    public cost = 0;                //cost of appointments to be shown on right
     //all customers'appointments arrays
-    public allApts: any[] = [{"id":"101","appointments":[
+    public allApts: any[] = [{"id":201,"appointments":[
 
         {
             "id": 101,
@@ -32,14 +36,15 @@ export class CustomerComponent implements OnInit,AfterViewInit{
             "note": "test change note",
             "start": "2017-11-14T15:00:00",
             "end": "2017-11-14T15:30:00",
-            "date": "Thu 14 Dec 2017",
-            "time": "03:00pm - 03:30pm",
+            "displayDate": "Thu 14 Dec 2017",
+            "displayTime": "03:00pm - 03:30pm",
             "customer": "Customer A",
-
             "duration": "30min",
-            "cost": "$150",
+            "cost": 150,
+            "className": "event-green",
             "recur": false,
             "daily": false,
+            "weekly": false,
             "monthly": false,
             "annually": false,
             "order": 0
@@ -51,21 +56,22 @@ export class CustomerComponent implements OnInit,AfterViewInit{
             "note": "1",
             "start": "2017-11-14T17:00:00",
             "end": "2017-11-14T18:00:00",
-            "date": "Thu 14 Dec 2017",
-            "time": "05:00pm - 06:00pm",
+            "displayDate": "Thu 14 Dec 2017",
+            "displayTime": "05:00pm - 06:00pm",
             "customer": "Customer A",
-
             "duration": "60min",
-            "cost": "$300",
+            "cost": 300,
+            "className": "event-green",
             "recur": false,
             "daily": false,
+            "weekly":false,
             "monthly": false,
             "annually": false,
             "order": 0
         }
     ]},
         {
-            "id": "102", "appointments":[
+            "id": 202, "appointments":[
 
             {
                 "id": 103,
@@ -74,14 +80,15 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                 "note": "2",
                 "start": "2017-11-15T09:00:00",
                 "end": "2017-11-15T10:30:00",
-                "date": "Thu 15 Dec 2017",
-                "time": "09:00am - 10:30am",
+                "displayDate": "Thu 15 Dec 2017",
+                "displayTime": "09:00am - 10:30am",
                 "customer": "John",
-
                 "duration": "30min",
-                "cost": "$150",
+                "cost": 150,
+                "className": "event-green",
                 "recur": false,
                 "daily": false,
+                "weekly": false,
                 "monthly": false,
                 "annually": false,
                 "order": 0
@@ -93,21 +100,22 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                 "note": "3",
                 "start": "2017-11-17T17:00:00",
                 "end": "2017-11-17T18:00:00",
-                "date": "Thu 17 Dec 2017",
-                "time": "05:00pm - 06:00pm",
+                "displayDate": "Thu 17 Dec 2017",
+                "displayTime": "05:00pm - 06:00pm",
                 "customer": "John",
-
                 "duration": "60min",
-                "cost": "$300",
+                "cost": 300,
+                "className": "event-green",
                 "recur": false,
                 "daily": false,
+                "weekly": false,
                 "monthly": false,
                 "annually": false,
                 "order": 0
             }
             ]
         }, {
-            "id": "103", "appointments":[
+            "id": 203, "appointments":[
 
             {
                 "id": 103,
@@ -116,21 +124,22 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                 "note": "4",
                 "start": "2017-11-15T09:00:00",
                 "end": "2017-11-15T10:30:00",
-                "date": "Thu 15 Dec 2017",
-                "time": "09:00am - 10:30am",
+                "displayDate": "Thu 15 Dec 2017",
+                "displayTime": "09:00am - 10:30am",
                 "customer": "Bob",
-
                 "duration": "30min",
-                "cost": "$150",
+                "cost": 150,
+                "className": "event-green",
                 "recur": false,
                 "daily": false,
+                "weekly": false,
                 "monthly": false,
                 "annually": false,
                 "order": 0
             }
         ]}];
 
-    public appointments:any;        //appointments to be shown on right
+   
     weekday = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     services = ['some service1', 'some service2'];
@@ -138,13 +147,16 @@ export class CustomerComponent implements OnInit,AfterViewInit{
     private admininfoLink = 'http://testingtesttest.000webhostapp.com/adminInfo.php';
     private customersLink = 'http://testingtesttest.000webhostapp.com/customer.php';
 
-    constructor(private appService: appService, private CalendarComponent: CalendarComponent) {
+    constructor(private appService: appService, private Booking: Booking, private CalendarComponent: CalendarComponent) {
 
     }
     
     // constructor(private navbarTitleService: NavbarTitleService, private notificationService: NotificationService) { }
 
     public ngOnInit() {
+        var tempWkHr = this.Booking.calculateWorkingHours(this.Booking.businessHours, this.Booking.breakTime);
+        this.Booking.workingHours = tempWkHr.workingHours;
+        this.Booking.workdays = tempWkHr.workDays;
         // set value of the input fields
 
         // this.appService.getJson(this.customersLink).then((data) => {
@@ -153,16 +165,18 @@ export class CustomerComponent implements OnInit,AfterViewInit{
 
         for(var i = 0; i < this.allApts.length; i ++){
             var temp = this.allApts[i].appointments;
+            
             for(var j = 0; j < temp.length; j ++){
                 var tempstart = new Date(parseInt(temp[j].start.substring(0, 4)), parseInt(temp[j].start.substring(5, 7)), parseInt(temp[j].start.substring(8, 10)), parseInt(temp[j].start.substring(11, 13)), parseInt(temp[j].start.substring(14, 16)));
                 var tempend = new Date(parseInt(temp[j].end.substring(0, 4)), parseInt(temp[j].end.substring(5, 7)), parseInt(temp[j].end.substring(8, 10)), parseInt(temp[j].end.substring(11, 13)), parseInt(temp[j].end.substring(14, 16)));
                 temp[j].start = tempstart;
                 temp[j].end = tempend;
             }
+            
         }
             this.customers = [
                 {
-                    "id": "101",
+                    "id": 201,
                     "img": "../assets/img/faces/avatar.jpg",
                     "name": "Customer A",
                     "phone": "bd546139",
@@ -174,7 +188,7 @@ export class CustomerComponent implements OnInit,AfterViewInit{
 
                 },
                 {
-                    "id": "102",
+                    "id": 202,
                     "img": "../assets/img/faces/card-profile1-square.jpg",
                     "name": "John",
                     "phone": "bd546139",
@@ -186,7 +200,7 @@ export class CustomerComponent implements OnInit,AfterViewInit{
 
                 },
                 {
-                    "id": "103",
+                    "id": 203,
                     "img": "../assets/img/faces/card-profile2-square.jpg",
                     "name": "Bob",
                     "phone": "bd546139",
@@ -201,6 +215,9 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                     
             this.displayCust = this.customers[0];       //default show the first customer
             this.appointments =this.allApts[0].appointments;        //default show the first customer's appointments
+            for(var i = 0; i < this.appointments.length; i ++){     //calculate cost of appointments
+                this.cost += this.appointments[i].cost;
+            }
             
             setTimeout(function () { $('#subsidebar-0').addClass('selected'); }, 1000);     //need to wait till customers are loaded on the subsidebar
            
@@ -213,21 +230,7 @@ export class CustomerComponent implements OnInit,AfterViewInit{
         var today = new Date();
         //below might needed in calendar to convert immediate displayable date in event obj
         var aptdate = this.weekday[today.getDay()] + " " + today.getDate() + " " + this.month[today.getMonth()] + " " + today.getFullYear();
-
-        // {
-        //     "id": 101,
-        //         "staff": "Tania Andrew",
-        //             "title": "All Day Event",
-        //                 "note": "",
-        //                     "start": "2017-11-18T08:00:00",
-        //                         "end": "2017-11-18T09:00:00",
-        //                             "className": "event-default",
-        //                                 "recur": false,
-        //                                     "daily": false,
-        //                                         "monthly": false,
-        //                                             "annually": false,
-        //                                                 "order": 0
-        // },
+            
 
     }
 
@@ -256,6 +259,12 @@ export class CustomerComponent implements OnInit,AfterViewInit{
 
             console.log(this.displayCust);        //DEBUG
 
+            for(var i = 0; i < this.customers.length; i ++){
+                if(this.customers[i].id == this.displayCust.id){
+                    this.customers[i] = this.displayCust;
+                }
+            }
+            console.log(this.customers);
             // update info to DB
             // var updateAdmin = { "Admin": this.admin };
             // this.appService.postJson(this.admininfoPostLink, updateAdmin);
@@ -268,12 +277,65 @@ export class CustomerComponent implements OnInit,AfterViewInit{
     }
 
     addApt(){
-        this.CalendarComponent.testing();
+        var self = this;
+        var today = new Date();
+        var selecthtml = '';
+        for (var i = 0; i < this.CalendarComponent.services.length; i++) {
+            selecthtml += '<option value="';
+            selecthtml += this.CalendarComponent.services[i];
+            selecthtml += '" >';
+            selecthtml += this.CalendarComponent.services[i];
+            selecthtml += '</option>';
+        }
+
+        swal({
+            title: 'Make an appointment',
+            html: '<input class="form-control" placeholder="Staff" id="staff" value="' + this.adminName + '" readonly>' +
+            '<div class="row">' +
+            '<label style="margin-right:5px">Service</label>' +
+            '<select id="service">' +
+            '<option value="" disabled selected> Select a service </option>' +
+            selecthtml +
+            '</select>' +
+            '</div>' +
+            '<div class="row">' +
+            '<label style="margin-right:5px">Start time</label>' +
+            '<input type="date" name="input" id="dateFrom" value="' + moment(today).format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + this.fiveYearsBefore + '-01-01" max="' + this.fiveYearsAfter + '-12-31" required />' +
+            '<input type="time" name="input" id="timeFrom" value="' + moment(today).format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+            '</div>' +
+            '<input class="form-control" placeholder="Note" id="note">' +
+            '<div class="row">' +
+            '<input type="checkbox" name="recur" required/>' + 'Recurring' +
+            '</div>' +
+            '<input type="radio" name= "optionsRadios" value="annually" style="margin-left:8px;">' + 'Annually(3 years)' +
+            '<input type="radio" name= "optionsRadios" value="monthly" style="margin-left:8px;">' + 'Monthly(6 months)' +
+            '<input type="radio" name= "optionsRadios" value="weekly" style="margin-left:8px;">' + 'Weekly(5 weeks)' +
+            '<input type="radio" name= "optionsRadios" value="daily" style="margin-left:8px;">' + 'Daily(7 days)',
+            showCancelButton: true,
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function (result: any) {
+            const dateFrom = $('#dateFrom').val();
+            var start = new Date(parseInt(dateFrom.substring(0, 4)), parseInt(dateFrom.substring(5, 7)) - 1, parseInt(dateFrom.substring(8, 10)));
+            console.log(start.getDay());
+            console.log(self.Booking.workdays);
+            if (self.Booking.workdays.indexOf(start.getDay()) != -1) {
+                
+                self.processBookingInput({});
+            } else {               //end of check on weekdays
+                swal(
+                    "Failed to add event",
+                    "We are closed",
+                    'warning'
+                )
+            }
+
+        });
     }
 
     viewApt(id){
-        const fiveYearsBefore = 2017 - 5;
-        const fiveYearsAfter = 2017 + 5;
+        
         var event;
         var temp = this.loadRecur(id,this.appointments);
         for(var i = 0; i < this.appointments.length; i ++){
@@ -295,7 +357,8 @@ export class CustomerComponent implements OnInit,AfterViewInit{
             selecthtml += this.services[i];
             selecthtml += '</option>';
         }
-
+        // event.start.toISOString().substring(0, 10)       //if moment not work, "YYYY-MM-DD"
+        // event.start.toTimeString().substring(0, 8)       //"HH:mm:ss"
         swal({
             title: 'Make an appointment',
             html: '<input class="form-control" placeholder="Staff" id="staff" value="' + event.staff + '" readonly>' +
@@ -308,8 +371,8 @@ export class CustomerComponent implements OnInit,AfterViewInit{
             '</div>' +
             '<div class="row">' +
             '<label style="margin-right:5px">Start time</label>' +
-            '<input type="date" name="input" id="dateFrom" value="' + event.start.toISOString().substring(0, 10) + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
-            '<input type="time" name="input" id="timeFrom" value="' + event.start.toISOString().substring(11, 19) + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+            '<input type="date" name="input" id="dateFrom" value="' + moment(event.start).format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + this.fiveYearsBefore + '-01-01" max="' + this.fiveYearsAfter + '-12-31" required />' +
+            '<input type="time" name="input" id="timeFrom" value="' + moment(event.start).format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
             '</div>' +
             '<input class="form-control" placeholder="Note" id="note" value="' + event.note + '">' +
             '<div class="row">' +
@@ -326,6 +389,15 @@ export class CustomerComponent implements OnInit,AfterViewInit{
             buttonsStyling: false
         }).then((result) => {
            
+            if (event.staff == this.adminName) {
+                this.processBookingInput(event);
+            } else {
+                swal(
+                    "Failed to edit event",
+                    "This event is created by other staff",
+                    'warning'
+                );
+            }
 
             
 
@@ -333,7 +405,7 @@ export class CustomerComponent implements OnInit,AfterViewInit{
 
             if (dismiss === 'cancel') {
                 // delete this event
-                
+                // this.CalendarComponent.deleteEventList(event.id);
                 // console.log(self.eventList);        //DEBUG
             }
         });
@@ -428,6 +500,10 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                 break;
             }
         }
+        this.cost = 0;
+        for(var i = 0; i < this.appointments.length; i ++){
+            this.cost += this.appointments[i].cost;
+        }
         
     }
 
@@ -448,8 +524,142 @@ export class CustomerComponent implements OnInit,AfterViewInit{
         }
     }
 
-    processEvent(){
+    processBookingInput(event){
+        var self = this;
+        const adminName = 'Tania Andrew';
+        let eventData;
+        const staff = $('#staff').val();
+        const event_title = $('#service').val();
+        const note = $('#note').val();
+        const dateFrom = $('#dateFrom').val();
+        const dateTo = $('#dateFrom').val();
+        const timeFrom = $('#timeFrom').val();
+        const timeTo = $('#timeFrom').val();
+        const recur = $('input[name = "recur"]:checked').val();
+        const freq = $('input[name = "optionsRadios"]:checked').val();
+        // console.log(result);    //DEBUG: boolean
+        // DEBUG:===============
+        // console.log(staff);
+        // console.log(event_title);
+        // console.log(note);
+        // console.log(dateFrom);
+        // console.log(dateTo);
+        // console.log(timeFrom);
+        // console.log(timeTo);
+        // console.log(recur);
+        // console.log(freq);
+        // console.log(start);
+        // console.log(end);
+        // ====================
+        var timeFromHour = parseInt(timeFrom.substring(0, 2));
+        var timeFromMin = parseInt(timeFrom.substring(3, 5));
+        var timeToHour = parseInt(timeTo.substring(0, 2));
+        var timeToMin = parseInt(timeTo.substring(3, 5)) + 30;
+        // console.log(timeToMin);
+        for (var i = 0; i < self.Booking.workingHours.length; i += 2) {
+            var morningFromHour = parseInt(self.Booking.workingHours[i].start.substring(0, 2));
+            var morningFromMin = parseInt(self.Booking.workingHours[i].start.substring(3, 5));
+            var morningToHour = parseInt(self.Booking.workingHours[i].end.substring(0, 2));
+            var morningToMin = parseInt(self.Booking.workingHours[i].end.substring(3, 5));
 
+            var afternoonFromHour = parseInt(self.Booking.workingHours[i + 1].start.substring(0, 2));
+            var afternoonFromMin = parseInt(self.Booking.workingHours[i + 1].start.substring(3, 5));
+            var afternoonToHour = parseInt(self.Booking.workingHours[i + 1].end.substring(0, 2));
+            var afternoonToMin = parseInt(self.Booking.workingHours[i + 1].end.substring(3, 5));
+
+            var closed = self.Booking.checkClosed(timeFromHour, timeFromMin, timeToHour, timeToMin, morningFromHour, morningFromMin, morningToHour, morningToMin, afternoonFromHour, afternoonFromMin, afternoonToHour, afternoonToMin);
+            console.log(timeFromHour);
+            if (closed) {
+                swal(
+                    "Failed to add event",
+                    "We are closed at that time",
+                    'warning'
+                );
+            } else if (event_title) {
+
+                var times = recur != 'on' ? 1 : freq == 'annually' ? 3 : freq == 'monthly' ? 6 : freq == 'weekly' ? 5 : freq == 'daily' && 7;
+
+                var id = 0;
+                var start: any;
+                var end: any;
+                if (event.id == null) {       //create new
+                    id = Math.floor(Math.random() * 1000);
+                    start = new Date(parseInt(dateFrom.substring(0, 4)), parseInt(dateFrom.substring(5, 7)) - 1, parseInt(dateFrom.substring(8, 10)));
+                    end = new Date(parseInt(dateTo.substring(0, 4)), parseInt(dateTo.substring(5, 7)) - 1, parseInt(dateTo.substring(8, 10)));
+                } else {                      //edit existing 
+                    id = event.id;
+                    //if recurring, get the first date of recur
+                    for (var i = 0; i < self.appointments.length; i++) {
+                        if (self.appointments[i].id == event.id && start == null) {
+                            start = self.appointments[i].start;
+                            end = self.appointments[i].end;
+                            break;
+                        }
+                    }
+                    self.Booking.deleteEvent(event.id, self.appointments);
+
+                }
+                var k = 0;
+                for (var i = 0; i < times; i++) {
+
+                    var temp = self.Booking.custStartCustEnd(start.getFullYear(), start.getMonth(), start.getDate(), timeFromHour, timeFromMin, end.getFullYear(), end.getMonth(), end.getDate(), timeToHour, timeToMin, times, i, k, this.Booking.workdays);
+
+                    var customStart = temp.start;
+                    var customEnd = temp.end;
+                    var displayDate = this.weekday[customStart.getDay()] + " " + customStart.getDate() + " " + this.month[customStart.getMonth()] + " " + customStart.getFullYear();
+                    var displayTime = moment(customStart).format("HH:mm") + " - " + moment(customEnd).format("HH:mm");
+                    var customClass = temp.class;
+                    var r = temp.recur;
+                    var d = temp.daily;
+                    var w = temp.weekly;
+                    var m = temp.monthly;
+                    var a = temp.annually;
+                    k = temp.K;
+                    // console.log(k);
+                    console.log(customStart);
+                    console.log(customEnd);
+
+                    eventData = {
+                        id: id,        //same for recurring events
+                        staff: staff,
+                        title: event_title,
+                        note: note,
+                        start: customStart,
+                        end: customEnd,
+                        displayDate: displayDate,
+                        displayTime: displayTime,
+                        // customer: ,
+                        // duration: ,
+                        // cost: ,
+                        className: customClass,     //color of the event (once:green, daily:azure,monthly:orange,annually:red)
+                        recur: r,
+                        daily: d,
+                        weekly: w,
+                        monthly: m,
+                        annually: a,
+                        order: i
+                    };
+
+                    self.appointments.push(eventData);
+
+                }
+                for (var i = 0; i < this.allApts.length; i++) {
+                    if (this.allApts[i].id == id) {
+                        this.allApts[i].appointments = this.appointments;
+                        break;
+                    }
+                }
+
+
+            } else {
+                swal(
+                    "Failed to add event",
+                    "You haven't fill in the event title yet. Please try again.",
+                    'warning'
+                )
+            }
+
+        }           //end of for workingHours
     }
   
 }

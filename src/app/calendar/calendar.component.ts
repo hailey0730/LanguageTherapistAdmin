@@ -1,9 +1,11 @@
 // IMPORTANT: this is a plugin which requires jQuery for initialisation and data manipulation
 
 import { Component, OnInit, AfterViewInit} from '@angular/core';
+import * as moment from 'moment';
 // import { NgModel } from '@angular/forms';
 
 import { appService } from '../app.service';
+import { Booking } from '../bookingSystem/booking';
 declare const swal: any;
 declare const $: any;
 
@@ -12,13 +14,13 @@ declare const $: any;
     templateUrl: 'calendar.component.html',
     styleUrls: [],      
     providers:[
-        appService
+        appService, Booking
     ]
 })
 
 export class CalendarComponent implements OnInit, AfterViewInit {
     
-    constructor(private appService: appService) {
+    constructor(private appService: appService, private Booking: Booking) {
 
     }
     today = new Date();
@@ -45,114 +47,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     ];
     public workingHours = [];
     public workdays = [];
-    // ============testing events====================
-    // eventList = [
-
-    //     {
-    //         id: 101,
-    //         staff: 'Tania Andrew',
-    //         title: 'All Day Event',
-    //         note: '',
-    //         start: new Date(this.y, this.m, 1, 0, 0),
-    //         end: new Date(this.y, this.m, 1, 23, 59),
-    //         className: 'event-default',
-    //         recur: false,
-    //         daily: false,
-    //         monthly: false,
-    //         annually:false,
-    //         order:0
-    //     },
-    //     {
-    //         id: 999,
-    //         staff: 'Tania Andrew',
-    //         title: 'Repeating Event',
-    //         note: '',
-    //         start: new Date(this.y, this.m,this.d - 4, 6, 0),
-    //         end: new Date(this.y, this.m, this.d - 4, 8, 0),
-    //         allDay: false,
-    //         className: 'event-rose',
-    //         recur: true,
-    //         daily: true,
-    //         monthly: false,
-    //         annually:false,
-    //         order:0
-    //     },
-    //     {
-    //         id: 999,
-    //         staff: 'Tania Andrew',
-    //         title: 'Repeating Event',
-    //         note: '',
-    //         start: new Date(this.y, this.m, this.d - 3, 6, 0),
-    //         end: new Date(this.y, this.m, this.d - 3, 8, 0),
-    //         allDay: false,
-    //         className: 'event-rose',
-    //         recur: true,
-    //         daily: true,
-    //         monthly: false,
-    //         annually:false,
-    //         order:1
-    //     },
-    //     {
-    //         id: 999,
-    //         staff: 'Tania Andrew',
-    //         title: 'Repeating Event',
-    //         note: '',
-    //         start: new Date(this.y, this.m, this.d - 2, 6, 0),
-    //         end: new Date(this.y, this.m, this.d - 2, 8, 0),
-    //         allDay: false,
-    //         className: 'event-rose',
-    //         recur: true,
-    //         daily: true,
-    //         monthly: false,
-    //         annually:false,
-    //         order:2
-    //     },
-    //     {
-    //         id: 999,
-    //         staff: 'Tania Andrew',
-    //         title: 'Repeating Event',
-    //         note: '',
-    //         start: new Date(this.y, this.m, this.d - 1, 6, 0),
-    //         end: new Date(this.y, this.m, this.d - 1, 8, 0),
-    //         allDay: false,
-    //         className: 'event-rose',
-    //         recur: true,
-    //         daily: true,
-    //         monthly: false,
-    //         annually:false,
-    //         order:3
-    //     },
-    //     {
-    //         id: 201,
-    //         staff: 'Tania Andrew',
-    //         title: 'Lunch',
-    //         note: '',
-    //         start: new Date(this.y, this.m, this.d + 7, 12, 0),
-    //         end: new Date(this.y, this.m, this.d + 7, 14, 0),
-    //         allDay: false,
-    //         className: 'event-red',
-    //         recur: false,
-    //         daily: false,
-    //         monthly: false,
-    //         annually: false,
-    //         order:0
-    //     },
-    //     {
-    //         id: 501,
-    //         staff: 'Tania Andrew',
-    //         title: 'Birthday Party',
-    //         note: '',
-    //         start: new Date(this.y, this.m, this.d + 1, 19, 0),
-    //         end: new Date(this.y, this.m, this.d + 1, 22, 30),
-    //         allDay: false,
-    //         className: 'event-azure',
-    //         recur: false,
-    //         daily: false,
-    //         monthly: false,
-    //         annually: false,
-    //         order:0
-    //     }
-    // ];
     public adminList = [];
 
     public JohnList =
@@ -254,31 +148,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         
-        for(var i = 0; i < this.businessHours.length; i ++){
-            var bdow = this.businessHours[i].dow;
-            var temp1 = { dow: [], start: '', end: '' };
-            var temp2 = {dow:[],start:'',end:''};
-            for(var j = 0; j < bdow.length; j ++){
-                // console.log(this.breakTime[i].dow.indexOf(bdow[j]));
-                if(this.breakTime[i].dow.indexOf(bdow[j])!= -1){
-                    temp1.dow[j] = bdow[j];
-                    this.workdays.push(bdow[j]);
-                }
-            }
-                if(temp1.start == ''){
-                    temp1.start = this.businessHours[i].start;
-                    temp1.end = this.breakTime[i].start;
-                    temp2.dow = temp1.dow;
-                    temp2.start = this.breakTime[i].end;
-                    temp2.end = this.businessHours[i].end;
-                    this.workingHours.push(temp1);
-                    this.workingHours.push(temp2);
-                }
-                
-            
-            
-        }
-        // console.log(this.workingHours);
+        var temp = this.Booking.calculateWorkingHours(this.businessHours, this.breakTime);
+        this.Booking.workingHours = temp.workingHours;
+        this.Booking.workdays = temp.workDays;
+        
+        console.log(this.Booking.workingHours);
 
         const $calendar = $('#fullCalendar');
         const adminName = 'Tania Andrew';
@@ -290,7 +164,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
         const fiveYearsAfter = y + 5;
         const fiveYearsBefore = y - 5;
-
+        
         
         $calendar.fullCalendar({
             viewRender: function(view: any, element: any) {
@@ -321,13 +195,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     titleFormat: 'D MMM, YYYY'
                 }
             }, 
-            businessHours: this.workingHours, //this.businessHours,
+            businessHours: this.Booking.workingHours, //this.businessHours,
             eventConstraint: "businessHours",
 
             select: (start: any, end: any)=> {
                 var self = this;
                 // on select we show the Sweet Alert modal with an input
-                if (self.workdays.indexOf(start.day()) != -1) {
+                if (self.Booking.workdays.indexOf(start.day()) != -1) {
                    var selecthtml = '';
                    for(var i = 0; i < self.services.length; i ++){
                        selecthtml += '<option value="'; 
@@ -392,7 +266,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 var self = this;
                 console.log(event.id);
                 console.log(event);
-                var temp = self.loadRecur(event.id);
+                var temp = self.Booking.loadRecur(event.id, self.eventList);
                 var selecthtml = '';
                 for (var i = 0; i < self.services.length; i++) {
                     selecthtml += '<option value="';
@@ -455,7 +329,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     if (dismiss === 'cancel') {
                         // delete this event
                         $calendar.fullCalendar('removeEvents', event.id);        //some idOrFilter to be removed
-                        self.deleteEventList(event.id);
+                        self.Booking.deleteEvent(event.id, self.eventList);
+                        self.Booking.deleteEvent(event.id, self.adminList);
                         // console.log(self.eventList);        //DEBUG
                     }
                 });
@@ -477,6 +352,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(){}
 
+    //show multiple users'views
     changeView(event){
         // console.log(this.selectedUsers);     //DEBUG
         var list = [];
@@ -495,108 +371,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         $('#fullCalendar').fullCalendar('addEventSource', this.eventList);
     }
 
-    loadRecur(id) {
-        var obj:any;
-        for (var i = 0; i < this.eventList.length; i++) {
-            if (this.eventList[i].id == id) {           
-                if (this.eventList[i]['recur']) {
-                    obj = this.eventList[i]['daily'] ? { recur: 'checked', annually: '', monthly: '', weekly:'', daily: 'checked' } : this.eventList[i]['weekly'] ? {
-                        recur: 'checked', annually: '', monthly: '', weekly: 'checked', daily: ''
-                    } : this.eventList[i]['monthly'] ? { recur: 'checked', annually: '', monthly: 'checked', weekly: '', daily: '' } : { recur: 'checked', annually: 'checked', monthly: '', weekly: '', daily: '' }
-                    
-                }else{
-                    obj = { recur: '', annually: '', monthly: '', weekly: '', daily: '' } ;
-                }
-                return obj;
-            }
-        }
-    }
-
-    deleteEventList(id){
-        for (var i = 0; i < this.eventList.length; i++) {
-            if (this.eventList[i].id === id) {
-                this.eventList.splice(i, 1);
-                i--;
-            }
-           
-        }
-        for(var i = 0; i < this.adminList.length; i ++){
-            if (this.adminList[i].id === id) {
-                this.adminList.splice(i, 1);
-                i--;
-            }
-        }
-    }
-
-    custStartCustEnd(sy,sm,sd,sh,smin,ey,em,ed,eh,emin,times,i,k){
-        var customStart;
-        var customEnd;
-        var customClass;
-        var r = false;
-        var d = false;
-        var m = false;
-        var w = false;
-        var a = false;
-       
-        if (times == 1) {
-            customStart = new Date(sy, sm, sd, sh, smin);
-            customEnd = new Date(ey, em, ed, eh, emin);
-            customClass = 'event-green';
-        } else if (times == 3) {
-            customStart = new Date(sy+i, sm, sd, sh, smin);
-            customEnd = new Date(ey+i, em, ed, eh, emin);
-            customClass = 'event-red';
-            r = true;
-            a = true;
-           
-            while(this.workdays.indexOf(customStart.getDay()) == -1){
-                customStart = new Date(sy + i, sm, sd+k, sh, smin);
-                customEnd = new Date(ey + i, em, ed+k, eh, emin);
-                k++;
-            }
-            k=0;
-        } else if (times == 6) {
-            customStart = new Date(sy, sm+i, sd, sh, smin);
-            customEnd = new Date(ey, em+i, ed, eh, emin);
-            customClass = 'event-orange';
-            r = true;
-            m = true;
-           
-            while (this.workdays.indexOf(customStart.getDay()) == -1) {
-                customStart = new Date(sy, sm + i, sd+k, sh, smin);
-                customEnd = new Date(ey, em + i, ed+k, eh, emin);
-                k++;
-            }
-            k = 0;
-        }else if (times == 5){
-            customStart = new Date(sy, sm , sd + (7*i), sh, smin);
-            customEnd = new Date(ey, em, ed + (7 * i), eh, emin);
-            customClass = 'event-rose';
-            r = true;
-            w = true;
-        } else if (times == 7) {
-            customStart = new Date(sy, sm, sd+i+k, sh, smin);
-            customEnd = new Date(ey, em, ed+i+k, eh, emin);
-            customClass = 'event-azure';
-            r = true;
-            d = true;
-            // console.log('day' + customStart.getDay());       //DEBUG
-            while (this.workdays.indexOf(customStart.getDay()) == -1) {
-                k++;
-                customStart = new Date(sy, sm, sd + i + k, sh, smin);
-                customEnd = new Date(ey, em, ed + i + k, eh, emin);
-                
-                // console.log(customStart);        //DEBUG
-                // console.log('loop' + k);         //DEBUG
-            }
-        }
-        
-        // console.log({ start: customStart, end: customEnd });        //DEBUG
-        return {start:customStart,end:customEnd,class:customClass,recur:r,daily:d,weekly:w,monthly:m,annually:a,K:k};
-
-    }
-
-    
     customMessagePopUp(func, message,event){
         var self = this;
         swal({
@@ -619,7 +393,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
                 var times = event.recur==false ? 1 : event.annually==true ? 3 : event.monthly==true ? 6 : event.weekly == true? 5:event.daily==true && 7;
                 
-                self.deleteEventList(event.id);
+                self.Booking.deleteEvent(event.id, self.eventList);
+                self.Booking.deleteEvent(event.id, self.adminList);
 
                 var temp;
                 var k = 0;
@@ -635,19 +410,21 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 var emin = parseInt(event.end.format().substring(14, 16));
                 for (var i = 0; i < times; i++) {
                     if(event.daily){
-                        temp = self.custStartCustEnd(sy, sm, sd - event.order, sh, smin, ey, em, ed - event.order, eh, emin, times, i,k);
+                        temp = self.Booking.custStartCustEnd(sy, sm, sd - event.order, sh, smin, ey, em, ed - event.order, eh, emin, times, i,k, this.Booking.workdays);
                     }else if(event.weekly){
-                        temp = self.custStartCustEnd(sy, sm, sd - (event.order * 7), sh, smin, ey, em, ed - event.order, eh, emin, times, i, k);
+                        temp = self.Booking.custStartCustEnd(sy, sm, sd - (event.order * 7), sh, smin, ey, em, ed - event.order, eh, emin, times, i, k, this.Booking.workdays);
                     }else if(event.monthly){
-                        temp = self.custStartCustEnd(sy, sm - event.order, sd, sh, smin, ey, em - event.order, ed, eh, emin, times, i,k);
+                        temp = self.Booking.custStartCustEnd(sy, sm - event.order, sd, sh, smin, ey, em - event.order, ed, eh, emin, times, i,k, this.Booking.workdays);
                     }else if(event.annually){
-                        temp = self.custStartCustEnd(sy - event.order, sm, sd, sh, smin, ey - event.order, em, ed, eh, emin, times, i,k);
+                        temp = self.Booking.custStartCustEnd(sy - event.order, sm, sd, sh, smin, ey - event.order, em, ed, eh, emin, times, i,k, this.Booking.workdays);
                     }else{
-                        temp = self.custStartCustEnd(sy, sm, sd, sh, smin, ey, em, ed, eh, emin, times, i,k);
+                        temp = self.Booking.custStartCustEnd(sy, sm, sd, sh, smin, ey, em, ed, eh, emin, times, i,k, this.Booking.workdays);
                     }
 
                     var customStart = temp.start;
                     var customEnd = temp.end;
+                    var displayDate = customStart.getDay() + customStart.getDate() + customStart.getMonth() + customStart.getFullYear();
+                    var displayTime = moment(customStart).format("HH:mm") + " - " + moment(customEnd).format("HH:mm");
                     k = temp.K;
                     // DEBUG===================
                     // console.log(k);
@@ -662,6 +439,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                         note: event.note,
                         start: customStart,
                         end: customEnd,
+                        displayDate: displayDate,
+                        displayTime: displayTime,
+                        // customer: event.customer,
+                        // duration: ,
+                        // cost: ,
                         className: event.className,     //color of the event (once:green, daily:azure,monthly:orange,annually:red)
                         recur: event.recur,
                         daily: event.daily,
@@ -743,73 +525,21 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         var timeFromMin = parseInt(timeFrom.substring(3, 5));
         var timeToHour = parseInt(timeTo.substring(0, 2));
         var timeToMin = parseInt(timeTo.substring(3, 5)) + 30;
-        console.log(timeToMin);
-        for (var i = 0; i < self.workingHours.length; i += 2) {
-            var morningFromHour = parseInt(self.workingHours[i].start.substring(0, 2));
-            var morningFromMin = parseInt(self.workingHours[i].start.substring(3, 5));
-            var morningToHour = parseInt(self.workingHours[i].end.substring(0, 2));
-            var morningToMin = parseInt(self.workingHours[i].end.substring(3, 5));
+        // console.log(timeToMin);
+        for (var i = 0; i < self.Booking.workingHours.length; i += 2) {
+            var morningFromHour = parseInt(self.Booking.workingHours[i].start.substring(0, 2));
+            var morningFromMin = parseInt(self.Booking.workingHours[i].start.substring(3, 5));
+            var morningToHour = parseInt(self.Booking.workingHours[i].end.substring(0, 2));
+            var morningToMin = parseInt(self.Booking.workingHours[i].end.substring(3, 5));
 
-            var afternoonFromHour = parseInt(self.workingHours[i + 1].start.substring(0, 2));
-            var afternoonFromMin = parseInt(self.workingHours[i + 1].start.substring(3, 5));
-            var afternoonToHour = parseInt(self.workingHours[i + 1].end.substring(0, 2));
-            var afternoonToMin = parseInt(self.workingHours[i + 1].end.substring(3, 5));
+            var afternoonFromHour = parseInt(self.Booking.workingHours[i + 1].start.substring(0, 2));
+            var afternoonFromMin = parseInt(self.Booking.workingHours[i + 1].start.substring(3, 5));
+            var afternoonToHour = parseInt(self.Booking.workingHours[i + 1].end.substring(0, 2));
+            var afternoonToMin = parseInt(self.Booking.workingHours[i + 1].end.substring(3, 5));
 
-            if (timeFromHour < morningFromHour || timeFromHour > afternoonToHour - 1) {
-                swal(
-                    "Failed to add event",
-                    "We are closed at that time",
-                    'warning'
-                );
-            } else if (timeFromHour > timeToHour) {
-                swal(
-                    "Failed to add event",
-                    "Invalid time",
-                    'warning'
-                )
-            } else if (timeToHour > afternoonToHour) {
-                swal(
-                    "Failed to add event",
-                    "We are closed at that time",
-                    'warning'
-                );
-            } else if (timeToHour == afternoonToHour && timeToMin > afternoonToMin) {
-                swal(
-                    "Failed to add event",
-                    "We are closed at that time",
-                    'warning'
-                );
-            } else if (timeFromHour > morningToHour - 1 && timeFromHour < afternoonFromHour) {
-                swal(
-                    "Failed to add event",
-                    "We are closed at that time",
-                    'warning'
-                );
-            } else if (timeFromHour == morningToHour && timeFromMin > morningToMin) {
-                swal(
-                    "Failed to add event",
-                    "We are closed at that time",
-                    'warning'
-                );
-            } else if (timeFromHour == afternoonFromHour && timeFromMin < afternoonFromMin) {
-                swal(
-                    "Failed to add event",
-                    "We are closed at that time",
-                    'warning'
-                );
-            } else if (timeToHour > morningToHour && timeToHour < afternoonFromHour + 1) {
-                swal(
-                    "Failed to add event",
-                    "We are closed at that time",
-                    'warning'
-                );
-            } else if (timeToHour == afternoonFromHour && timeToMin < afternoonFromMin) {
-                swal(
-                    "Failed to add event",
-                    "We are closed at that time",
-                    'warning'
-                );
-            } else if (timeToHour == morningToHour && timeToMin > morningToMin) {
+            var closed = self.Booking.checkClosed(timeFromHour, timeFromMin, timeToHour, timeToMin, morningFromHour, morningFromMin, morningToHour, morningToMin, afternoonFromHour, afternoonFromMin, afternoonToHour, afternoonToMin);
+
+            if(closed){
                 swal(
                     "Failed to add event",
                     "We are closed at that time",
@@ -836,19 +566,20 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                             break;
                         }
                     }
-                    self.deleteEventList(event.id);
+                    self.Booking.deleteEvent(event.id, self.eventList);
+                    self.Booking.deleteEvent(event.id, self.adminList);
 
                     $calendar.fullCalendar('removeEvents', event.id);
                 }
                 var k = 0;
                 for (var i = 0; i < times; i++) {
 
-                    var temp = self.custStartCustEnd(start.getFullYear(), start.getMonth(), start.getDate(), timeFromHour, timeFromMin, end.getFullYear(), end.getMonth(), end.getDate(), timeToHour, timeToMin, times, i, k);
-
-                    // var temp = self.custStartCustEnd(parseInt(dateFrom.substring(0, 4)), parseInt(dateFrom.substring(5, 7)) - 1, parseInt(dateFrom.substring(8, 10)), timeFromHour, timeFromMin, parseInt(dateTo.substring(0, 4)), parseInt(dateTo.substring(5, 7)) - 1, parseInt(dateTo.substring(8, 10)), timeToHour, timeToMin, times, i, k);
+                    var temp = self.Booking.custStartCustEnd(start.getFullYear(), start.getMonth(), start.getDate(), timeFromHour, timeFromMin, end.getFullYear(), end.getMonth(), end.getDate(), timeToHour, timeToMin, times, i, k, this.Booking.workdays);
 
                     var customStart = temp.start;
                     var customEnd = temp.end;
+                    var displayDate = customStart.getDay() + customStart.getDate() + customStart.getMonth() + customStart.getFullYear();
+                    var displayTime = moment(customStart).format("HH:mm") + " - " + moment(customEnd).format("HH:mm");
                     var customClass = temp.class;
                     var r = temp.recur;
                     var d = temp.daily;
@@ -867,6 +598,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                         note: note,
                         start: customStart,
                         end: customEnd,
+                        displayDate: displayDate,
+                        displayTime: displayTime,
+                        // customer: ,
+                        // duration: ,
+                        // cost: ,
                         className: customClass,     //color of the event (once:green, daily:azure,monthly:orange,annually:red)
                         recur: r,
                         daily: d,
@@ -900,8 +636,4 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         }           //end of for workingHours
     }
 
-    testing(){
-        console.log('getting from another class');
-    }
-   
  }
