@@ -1,19 +1,37 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 import { appService } from '../../app.service';
+import * as moment from 'moment';
+import 'moment/locale/pt-br';
 declare const swal: any;
 declare const $: any;
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './accountDetails.component.html',
-    styleUrls: [],
+    styleUrls: ['./css/accountDetails.css'],
     providers: [appService]
 })
 export class AccountDetailsComponent implements OnInit, AfterViewInit {
     
     public admin: any;
     public adminPic: string;
+    staffList = [];
+    public workingHr: any[] = [moment(new Date(0, 0, 0, 9, 30)).format("HH:mm"), moment(new Date(0, 0, 0, 18, 0)).format("HH:mm")];
+    public weeks: any[] = [{ day: 'Monday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
+    { day: 'Tuesday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
+    { day: 'Wednesday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
+    { day: 'Thursday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
+    { day: 'Friday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
+    { day: 'Saturday', switch: false, from: this.workingHr[0], to: this.workingHr[1] },
+    { day: 'Sunday', switch: false, from: this.workingHr[0], to: this.workingHr[1] }];
+    public weeksBreak: any[] = [{ day: 'Monday', switch: true, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] },
+    { day: 'Tuesday', switch: true, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] },
+    { day: 'Wednesday', switch: true, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] },
+    { day: 'Thursday', switch: true, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] },
+    { day: 'Friday', switch: true, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] },
+    { day: 'Saturday', switch: false, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] },
+    { day: 'Sunday', switch: false, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] }];
     private admininfoLink = 'http://testingtesttest.000webhostapp.com/adminInfo.php';
     private admininfoPostLink = 'http://testingtesttest.000webhostapp.com/adminInfo.json';
 
@@ -37,8 +55,27 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
             "country": "China",
             "description": "some description"
         };
+
+        // account Details tab 
         this.adminPic = this.admin.img == "" ? "../../assets/img/placeholder.jpg" : this.admin.img;
         this.admin.img != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
+
+        var staff2 = {
+            "id": 302,
+            "img": "../assets/img/faces/avatar.jpg",
+            "fn": "John",
+            "ln": "Chan",
+            "phone": "bd546139",
+            "mobile": "66443347",
+            "email": "hayhay0730@gmail.com",
+            "address": "somewhere over the rainbow",
+            "city": "HK",
+            "country": "China",
+            "description": "some description"
+        };
+
+        this.staffList.push(this.admin);
+        this.staffList.push(staff2);
 
         // this.appService.getJson(this.admininfoLink).then((data)=>{
         //     console.log(data);
@@ -48,6 +85,56 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
         //     this.admin[0] != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
         // })
 
+
+        // working hours tab
+        $("form").on('mouseover', '.row', function (event) {
+            var weekday = $(event.target).children()[0];
+            var i = weekday == 'Monday' ? 0 : weekday == 'Tuesday' ? 1 : weekday == 'Wednesday' ? 2 : weekday == 'Thursday' ? 3 : weekday == 'Friday' ? 4 : weekday == 'Saturday' ? 5 : 6;
+            var row = event.target.closest('.row');
+            $(row).css('background-color', '#fdeeff');
+
+        });
+
+        $("form").on('mouseout', '.row', function (event) {
+            var weekday = $(event.target).children()[0];
+            var i = weekday == 'Monday' ? 0 : weekday == 'Tuesday' ? 1 : weekday == 'Wednesday' ? 2 : weekday == 'Thursday' ? 3 : weekday == 'Friday' ? 4 : weekday == 'Saturday' ? 5 : 6;
+            var row = event.target.closest('.row');
+            $(row).css('background-color', 'white');
+
+        });
+
+
+
+        // breaks tab
+        $("#breakTable").on('click', '#delete', function (event) {
+            var row = event.target.closest('tr');
+            $(row).remove();
+
+        });
+
+        $("#breakTable").on('click', '#add', function (event) {
+            var addBreak = '<tr>' +
+                '<ng-container *ngIf="duration != null;">' +
+                '<td>' +
+                '<label style="margin-right:5px"> From </label>' +
+                '<input type="time" name="input" class="timeFrom" style="margin: 10px 0 10px 0;" value="{{duration.from}}" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+                '<label style="margin-right:5px" > To </label>' +
+                '<input type="time" name="input" class="timeTo" style="margin: 10px 0 10px 0;" value="{{duration.to}}" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+                '</td>' +
+                '<td class="td-actions text-right" >' +
+                '<button id="delete" type="button" rel="tooltip" class="btn btn-danger btn-round simple" >' +
+                '<i class="material-icons" > close </i>' +
+                '</button>' +
+                '</td>' +
+                '</ng-container>' +
+                '</tr>';
+
+            var row = event.target.closest('tr');
+            var subrow = $(row).children()[2];      //breakTime id
+            var tbody = $(subrow).children()[0];
+            $(tbody).append(addBreak);
+
+        }); 
             
     }
     
@@ -85,6 +172,183 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
         }, function (dismiss) {
             if (dismiss === 'cancel') {
                
+            }
+        })
+    }
+
+    addStaff(){
+
+    }
+
+    displayStaff(event, id){
+
+    }
+
+    updatewkhr() {
+        swal({
+            title: "Working hours changed",
+            text: "Are you sure about this change?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            var timefrom = [];
+            var timeto = [];
+            // update weeks to DB
+            $('.timeFrom').each(function (i, obj) {
+                timefrom[i] = $(this).val();
+            });
+            // console.log(timefrom);      //DEBUG
+
+            $('.timeTo').each(function (i, obj) {
+                timeto[i] = $(this).val();
+            });
+            // console.log(timeto);        //DEBUG
+
+            for (var i = 0; i < this.weeks.length; i++) {
+                this.weeks[i].from = timefrom[i];
+                this.weeks[i].to = timeto[i];
+            }
+
+            console.log(this.weeks);        //DEBUG
+        }, function (dismiss) {
+            if (dismiss === 'cancel') {
+
+            }
+        })
+    }
+
+    updateBreak() {
+        swal({
+            title: "Working hours changed",
+            text: "Are you sure about this change?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            // console.log(this.weeksBreak);        //DEBUG
+            var timefrom = [];
+            var timeto = [];
+            var error = false;
+
+            // update weeksBreak to DB
+            $('.timeFrom').each(function (i, obj) {
+                if ($(this).val() == "" || $(this).val() == null) {
+                    swal(
+                        "Failed to update",
+                        "You can't leave break time empty. Please try again.",
+                        'warning'
+                    )
+                    error = true;
+                } else {
+                    var parent = $(this).closest('tbody').parent();
+                    var time;
+                    switch (parent.attr('id')) {
+                        case 'breakTime0':
+                            time = { day: 'Monday', from: $(this).val() };
+                            break;
+                        case 'breakTime1':
+                            time = { day: 'Tuesday', from: $(this).val() };
+                            break;
+                        case 'breakTime2':
+                            time = { day: 'Wednesday', from: $(this).val() };
+                            break;
+                        case 'breakTime3':
+                            time = { day: 'Thursday', from: $(this).val() };
+                            break;
+                        case 'breakTime4':
+                            time = { day: 'Friday', from: $(this).val() };
+                            break;
+                        case 'breakTime5':
+                            time = { day: 'Saturday', from: $(this).val() };
+                            break;
+                        case 'breakTime6':
+                            time = { day: 'Sunday', from: $(this).val() };
+                            break;
+                        default:
+                            break;
+                    }
+                    if(time != null){
+                        timefrom.push(time);
+                    }
+                    
+                }
+
+            });
+
+
+            $('.timeTo').each(function (i, obj) {
+                if ($(this).val() == "" || $(this).val() == null) {
+                    swal(
+                        "Failed to update",
+                        "You can't leave break time empty. Please try again.",
+                        'warning'
+                    )
+                    error = true;
+                } else {
+                    var parent = $(this).closest('tbody').parent();
+                    var time;
+                    switch (parent.attr('id')) {
+                        case 'breakTime0':
+                            time = { day: 'Monday', to: $(this).val() };
+                            break;
+                        case 'breakTime1':
+                            time = { day: 'Tuesday', to: $(this).val() };
+                            break;
+                        case 'breakTime2':
+                            time = { day: 'Wednesday', to: $(this).val() };
+                            break;
+                        case 'breakTime3':
+                            time = { day: 'Thursday', to: $(this).val() };
+                            break;
+                        case 'breakTime4':
+                            time = { day: 'Friday', to: $(this).val() };
+                            break;
+                        case 'breakTime5':
+                            time = { day: 'Saturday', to: $(this).val() };
+                            break;
+                        case 'breakTime6':
+                            time = { day: 'Sunday', to: $(this).val() };
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    if (time != null) {
+                        timeto.push(time);
+                    }
+                }
+            });
+
+
+            for (var i = 0; i < this.weeksBreak.length; i++) {
+                this.weeksBreak[i].durations = [];
+                var k = 0;
+                for (var j = 0; j < timefrom.length; j++) {
+                    if (this.weeksBreak[i].day == timefrom[j].day && this.weeksBreak[i].day == timeto[j].day) {
+                        // if(this.weeksBreak[i].durations[j] != null){
+                        // console.log(this.weeksBreak[i].durations[j]);
+                        // this.weeksBreak[i].durations[j].from = timefrom[j].from;
+                        // this.weeksBreak[i].durations[j].to = timeto[j].to;
+                        this.weeksBreak[i].durations[k] = { from: timefrom[j].from, to: timeto[j].to };
+                        k++;
+                        // }
+                        // console.log(this.weeksBreak[i].durations[j]);        //DEBUG
+                    }
+                }
+                console.log(this.weeksBreak[i].durations);       //DEBUG
+            }
+
+            console.log(this.weeksBreak);            //DEBUG
+            // error && window.location.reload();           //if don't reload, newly added lines will be shown duplicated after added to weeksBreak durations
+
+        }, function (dismiss) {
+            if (dismiss === 'cancel') {
+
             }
         })
     }

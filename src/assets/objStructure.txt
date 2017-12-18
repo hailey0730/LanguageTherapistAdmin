@@ -54,7 +54,7 @@ event: (event id)	18attr
     "displayDate": "Mon 18 Dec 2017",
     "displayTime": "08:00am - 09:00am",
     "customer": "Customer A",
-    "duration": "60min",
+    "duration": 60,
     "cost":300,
     "className": "event-default",
     "recur": false,

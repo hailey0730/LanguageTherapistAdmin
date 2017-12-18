@@ -1,4 +1,6 @@
 import * as moment from 'moment';
+declare const swal: any;
+declare const $: any;
 
 export class Booking{
     public businessHours = [ // specify an array instead
@@ -147,6 +149,8 @@ export class Booking{
         return closed;
     }
 
+
+    
     //input: (id)int, array
     //output:{ recur: str, annually: str, monthly: str, weekly: str, daily: str }
     public loadRecur(id, list) {

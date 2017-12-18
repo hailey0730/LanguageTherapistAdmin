@@ -142,7 +142,7 @@ export class CustomerComponent implements OnInit,AfterViewInit{
    
     weekday = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    services = ['some service1', 'some service2'];
+    services = [{ "service": "some service1", "cost": 150, "duration": 30 }, { "service": "some service2", "cost": 240, "duration": 60 }]
     public adminPic: string;
     private admininfoLink = 'http://testingtesttest.000webhostapp.com/adminInfo.php';
     private customersLink = 'http://testingtesttest.000webhostapp.com/customer.php';
@@ -282,9 +282,9 @@ export class CustomerComponent implements OnInit,AfterViewInit{
         var selecthtml = '';
         for (var i = 0; i < this.CalendarComponent.services.length; i++) {
             selecthtml += '<option value="';
-            selecthtml += this.CalendarComponent.services[i];
+            selecthtml += this.CalendarComponent.services[i].service;
             selecthtml += '" >';
-            selecthtml += this.CalendarComponent.services[i];
+            selecthtml += this.CalendarComponent.services[i].service;
             selecthtml += '</option>';
         }
 
@@ -346,15 +346,15 @@ export class CustomerComponent implements OnInit,AfterViewInit{
         var selecthtml = '';
         for (var i = 0; i < this.services.length; i++) {
             selecthtml += '<option value="';
-            selecthtml += this.services[i];
-            if (event.title == this.services[i]) {
+            selecthtml += this.services[i].service;
+            if (event.title == this.services[i].service) {
                 selecthtml += '" selected >';
 
             } else {
                 selecthtml += '" >';
 
             }
-            selecthtml += this.services[i];
+            selecthtml += this.services[i].service;
             selecthtml += '</option>';
         }
         // event.start.toISOString().substring(0, 10)       //if moment not work, "YYYY-MM-DD"
@@ -551,21 +551,35 @@ export class CustomerComponent implements OnInit,AfterViewInit{
         // console.log(start);
         // console.log(end);
         // ====================
+        var cost = 0;
+        var duration = 0;
+        for (var i = 0; i < self.services.length; i++) {
+            if (event_title == self.services[i].service) {
+                cost = self.services[i].cost;
+                duration = self.services[i].duration;
+            }
+        }
+
         var timeFromHour = parseInt(timeFrom.substring(0, 2));
         var timeFromMin = parseInt(timeFrom.substring(3, 5));
         var timeToHour = parseInt(timeTo.substring(0, 2));
-        var timeToMin = parseInt(timeTo.substring(3, 5)) + 30;
+        var timeToMin = parseInt(timeTo.substring(3, 5)) + duration;
         // console.log(timeToMin);
         for (var i = 0; i < self.Booking.workingHours.length; i += 2) {
-            var morningFromHour = parseInt(self.Booking.workingHours[i].start.substring(0, 2));
-            var morningFromMin = parseInt(self.Booking.workingHours[i].start.substring(3, 5));
-            var morningToHour = parseInt(self.Booking.workingHours[i].end.substring(0, 2));
-            var morningToMin = parseInt(self.Booking.workingHours[i].end.substring(3, 5));
+            var temp1 = self.Booking.workingHours[i].start;
+            var temp2 = self.Booking.workingHours[i].end;
+            var temp3 = self.Booking.workingHours[i + 1].start;
+            var temp4 = self.Booking.workingHours[i + 1].end;
 
-            var afternoonFromHour = parseInt(self.Booking.workingHours[i + 1].start.substring(0, 2));
-            var afternoonFromMin = parseInt(self.Booking.workingHours[i + 1].start.substring(3, 5));
-            var afternoonToHour = parseInt(self.Booking.workingHours[i + 1].end.substring(0, 2));
-            var afternoonToMin = parseInt(self.Booking.workingHours[i + 1].end.substring(3, 5));
+            var morningFromHour = parseInt(temp1.substring(0, 2));
+            var morningFromMin = parseInt(temp1.substring(3, 5));
+            var morningToHour = parseInt(temp2.substring(0, 2));
+            var morningToMin = parseInt(temp2.substring(3, 5));
+
+            var afternoonFromHour = parseInt(temp3.substring(0, 2));
+            var afternoonFromMin = parseInt(temp3.substring(3, 5));
+            var afternoonToHour = parseInt(temp4.substring(0, 2));
+            var afternoonToMin = parseInt(temp4.substring(3, 5));
 
             var closed = self.Booking.checkClosed(timeFromHour, timeFromMin, timeToHour, timeToMin, morningFromHour, morningFromMin, morningToHour, morningToMin, afternoonFromHour, afternoonFromMin, afternoonToHour, afternoonToMin);
             console.log(timeFromHour);
@@ -599,6 +613,7 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                     self.Booking.deleteEvent(event.id, self.appointments);
 
                 }
+                
                 var k = 0;
                 for (var i = 0; i < times; i++) {
 
@@ -629,8 +644,8 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                         displayDate: displayDate,
                         displayTime: displayTime,
                         // customer: ,
-                        // duration: ,
-                        // cost: ,
+                        duration: duration,
+                        cost: cost,
                         className: customClass,     //color of the event (once:green, daily:azure,monthly:orange,annually:red)
                         recur: r,
                         daily: d,
@@ -648,6 +663,11 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                         this.allApts[i].appointments = this.appointments;
                         break;
                     }
+                }
+
+                this.cost = 0;
+                for (var i = 0; i < this.appointments.length; i++) {
+                    this.cost += this.appointments[i].cost;
                 }
 
 

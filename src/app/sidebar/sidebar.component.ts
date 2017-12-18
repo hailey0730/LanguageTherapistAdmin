@@ -137,9 +137,9 @@ export const ROUTES: RouteInfo[] = [
         type: 'sub',
         icontype: 'settings',
         children: [
-            { path: 'accountDetails', title: 'Account details', ab: '' },
-            { path: 'workingHours', title: 'Working Hours', ab: '' },
-            { path: 'breaks', title: 'Breaks', ab: '' }
+            { path: 'accountDetails', title: 'Account details', ab: '' }
+            // { path: 'workingHours', title: 'Working Hours', ab: '' },
+            // { path: 'breaks', title: 'Breaks', ab: '' }
             // { path: 'grid', title: 'Grid System', ab: 'GS' },
 
         ]

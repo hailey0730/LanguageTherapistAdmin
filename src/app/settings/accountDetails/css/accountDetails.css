@@ -1,0 +1,31 @@
+form{
+    margin:0 1.5em;
+}
+
+h4{
+    display: inline-block;
+}
+
+
+.staffName{
+    display:inline-block;
+    cursor: pointer;
+}
+
+.nav > li {
+    padding: 0 10px;
+}
+
+.selected{
+    background: linear-gradient(60deg, #ffe4e4, #fed0d0);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(226, 32, 32, 0.4);
+    border-radius: 5px;
+}
+
+.clickable{
+    cursor: pointer;
+}
+
+.main-content{
+    margin-left:20em;
+}

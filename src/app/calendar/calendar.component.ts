@@ -144,7 +144,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         { value: 'Mary' }
     ];
 
-    services = ['some service1', 'some service2']
+    services = [{"service":"some service1", "cost":150, "duration":30}, {"service":"some service2", "cost":240, "duration":60}]
 
     ngOnInit() {
         
@@ -152,8 +152,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         this.Booking.workingHours = temp.workingHours;
         this.Booking.workdays = temp.workDays;
         
-        console.log(this.Booking.workingHours);
-
         const $calendar = $('#fullCalendar');
         const adminName = 'Tania Andrew';
 
@@ -205,11 +203,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                    var selecthtml = '';
                    for(var i = 0; i < self.services.length; i ++){
                        selecthtml += '<option value="'; 
-                       selecthtml += self.services[i];
+                       selecthtml += self.services[i].service;
                        selecthtml += '" >';
-                       selecthtml += self.services[i];
+                       selecthtml += self.services[i].service;
                        selecthtml += '</option>';
                    }
+
+               
 
                 swal({
                     title: 'Make an appointment',
@@ -223,7 +223,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     '</div>' +
                     '<div class="row">' +
                     '<label style="margin-right:5px">Start time</label>' +
-                    '<input type="date" name="input" id="dateFrom" value="' + start.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required />' +
+                    '<input type="date" name="input" id="dateFrom" value="' + start.format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required/>' +
                     '<input type="time" name="input" id="timeFrom" value="' + start.format("HH:mm:ss") + '" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
                     '</div>' +
                     '<input class="form-control" placeholder="Note" id="note">' +
@@ -235,6 +235,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     '<input type="radio" name= "optionsRadios" value="weekly" style="margin-left:8px;">' + 'Weekly(5 weeks)' +
                     '<input type="radio" name= "optionsRadios" value="daily" style="margin-left:8px;">' + 'Daily(7 days)' ,
                     showCancelButton: true,
+                    confirmButtonText:'Add Customer',
                     confirmButtonClass: 'btn btn-success',
                     cancelButtonClass: 'btn btn-danger',
                     buttonsStyling: false
@@ -242,6 +243,20 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     
                     self.processBookingInput({});
 
+                    // for (var i = 0; i < self.eventList.length; i++) {
+                    //     if (self.eventList[i].id == completeEvent.id) {
+                    //         self.eventList[i] = completeEvent;
+                    //         console.log(self.eventList[i]);
+                    //     }
+                    // }
+                    // for (var i = 0; i < self.adminList.length; i++) {
+                    //     if (self.adminList[i].id == completeEvent.id) {
+                    //         self.adminList[i] = completeEvent;
+                    //     }
+                    // }
+                    
+                    
+                    
                     $calendar.fullCalendar('unselect');
 
                 });
@@ -264,21 +279,19 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             events: this.loadEventList(),
             eventClick: (event:any)=> {      //event on click swal edit or remove
                 var self = this;
-                console.log(event.id);
-                console.log(event);
                 var temp = self.Booking.loadRecur(event.id, self.eventList);
                 var selecthtml = '';
                 for (var i = 0; i < self.services.length; i++) {
                     selecthtml += '<option value="';
-                    selecthtml += self.services[i];
-                    if(event.title == self.services[i]){
+                    selecthtml += self.services[i].service;
+                    if (event.title == self.services[i].service){
                         selecthtml += '" selected >';
 
                     }else{
                         selecthtml += '" >';
                         
                     }
-                    selecthtml += self.services[i];
+                    selecthtml += self.services[i].service;
                     selecthtml += '</option>';
                 }
                 
@@ -306,13 +319,27 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     '<input type="radio" name= "optionsRadios" value="weekly" style="margin-left:8px;"' + temp.weekly + '>' + 'Weekly(5 weeks)' +
                     '<input type="radio" name= "optionsRadios" value="daily" style="margin-left:8px;" ' + temp.daily + '> Daily(7 days)',
                     showCancelButton: true,
+                    confirmButtonText: 'Add Customer',
                     confirmButtonClass: 'btn btn-success',
                     cancelButtonClass: 'btn btn-danger',
                     cancelButtonText: '<i class="material-icons">delete </i> Delete',
                     buttonsStyling: false
                 }).then((result)=> {
+                    console.log(event);
                     if(event.staff == adminName){
                         self.processBookingInput(event);
+
+                        // for (var i = 0; i < self.eventList.length; i++) {
+                        //     if (self.eventList[i].id == completeEvent.id) {
+                        //         self.eventList[i] = completeEvent;
+                        //     }
+                        // }
+                        // for (var i = 0; i < self.adminList.length; i++) {
+                        //     if (self.adminList[i].id == completeEvent.id) {
+                        //         self.adminList[i] = completeEvent;
+                        //     }
+                        // }
+                        
                     }else{
                         swal(
                             "Failed to edit event",
@@ -370,6 +397,199 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         // $('#fullCalendar').fullCalendar('renderEvent', renderList,true);         //doesn't work
         $('#fullCalendar').fullCalendar('addEventSource', this.eventList);
     }
+
+
+    //input:(event){eventObj}
+    addCustomer(event) {
+        var self = this;
+        var placeholderText = event.customer == "" ? "Search existing Customer": event.customer;
+        console.log(placeholderText);
+        const ipAPI = 'https://api.ipify.org?format=json'       //TESTING PURPOSE
+        swal.queue([{
+            title: "Customer",
+            html: '<input class="form-control" placeholder="'+ placeholderText + '" id="name" >',
+            confirmButtonText: 'Search',
+            showCancelButton: true,
+            showLoaderOnConfirm: true,
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonText: 'Add new customer',
+            cancelButtonClass: 'btn btn-info',
+            buttonsStyling: false,
+            preConfirm: (result) => {
+                return $.get(ipAPI).then((data) => {
+                    // swal.insertQueueStep(data.ip)
+                    // show if customer is found
+                    console.log($('#name').val());
+                    // if $('#name').val() == "" or null and event.customer !="". then event.customer
+                })
+            }
+        }]).then((result)=>{
+             //     var customerName = $('#name').val();
+        //     //send to backend to search
+        //     console.log(customerName);
+        //     //if found, add to event 
+        //     //else swal not found
+        //     swal(
+        //         "Cannot find customer",
+        //         "Please add new customer",
+        //         'warning'
+        //     );
+           
+        }, function(dismiss){
+            swal.setDefaults({
+                input: 'text',
+                confirmButtonText: 'Next &rarr;',
+                showCancelButton: true,
+                progressSteps: ['1', '2', '3']
+            })
+
+            var steps = [
+                'Customer Name',
+                'Mobile',
+                'E-mail'
+            ]
+
+            swal.queue(steps).then((result) => {
+                swal.resetDefaults()
+
+                if (result) {
+                    // swal({
+                    //     title: 'All done!',
+                    //     html:
+                    //     'Your answers: <pre>' +
+                    //     JSON.stringify(result.value) +
+                    //     '</pre>',
+                    //     confirmButtonText: 'Lovely!'
+                    // })
+
+                const randomID = 104;
+
+                var newCustInfo = {
+                    "id": randomID,
+                    "img": "../../assets/img/placeholder.jpg",
+                    "name": result[0],
+                    "phone": "",
+                    "mobile": result[1],
+                    "email": result[2],
+                    "address": "",
+                    "city": "",
+                    "country": ""
+
+                };
+
+                var newCustApt = {
+                    "id": randomID, "appointments": []
+                };
+
+                newCustApt.appointments.push(event);
+
+                // update DB
+                // add to event
+                event.customer = result[0];
+                // self.Booking.deleteEvent(event.id, self.eventList);
+                // self.eventList.push(event);
+                // self.Booking.deleteEvent(event.id, self.adminList);
+                // self.adminList.push(event);
+                 for (var i = 0; i < self.eventList.length; i++) {
+                    if (self.eventList[i].id == event.id) {
+                        self.eventList[i].customer = event.customer;
+                        console.log(self.eventList[i].customer);
+                        console.log(event.customer);
+                    }
+                }
+                for (var i = 0; i < self.adminList.length; i++) {
+                    if (self.adminList[i].id == event.id) {
+                        self.adminList[i].customer = event.customer;
+                    }
+                }
+                console.log(self.eventList);
+                }
+                console.log(result);
+            })
+        })
+        // swal({
+        //     title: "Customer",
+        //     html: '<input class="form-control" placeholder="'+ placeholderText + '" id="name" >',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Search',
+        //     confirmButtonClass: 'btn btn-success',
+        //     cancelButtonText: 'Add new customer',
+        //     cancelButtonClass: 'btn btn-info',
+        //     buttonsStyling: false
+        // }).then((result) => {
+        //     var customerName = $('#name').val();
+        //     //send to backend to search
+        //     console.log(customerName);
+        //     //if found, add to event 
+        //     //else swal not found
+        //     swal(
+        //         "Cannot find customer",
+        //         "Please add new customer",
+        //         'warning'
+        //     );
+        // }, function (dismiss) {
+        //     swal({
+        //         title: 'Add New Customer',
+        //         html: '<input class="form-control" placeholder="Name" id="newName" >' +
+        //         '<input class="form-control" placeholder="E-mail" type="email" id="newEmail" >' +
+        //         '<input class="form-control" placeholder="Mobile" type="tel" id="newMobile" >',
+        //         showCancelButton: true,
+        //         confirmButtonClass: 'btn btn-success',
+        //         cancelButtonClass: 'btn btn-danger',
+        //         buttonsStyling: false
+        //     }).then(function (result: any) {
+
+        //         var name = $('#newName').val();
+        //         var email = $('#newEmail').val();
+        //         var mobile = $('#newMobile').val();
+        //         console.log(name);
+        //         console.log(email);
+        //         console.log(mobile);
+        //         const randomID = "104";
+
+        //         var newCustInfo = {
+        //             "id": randomID,
+        //             "img": "../../assets/img/placeholder.jpg",
+        //             "name": name,
+        //             "phone": "",
+        //             "mobile": mobile,
+        //             "email": email,
+        //             "address": "",
+        //             "city": "",
+        //             "country": ""
+
+        //         };
+
+
+        //         var newCustApt = {
+        //             "id": randomID, "appointments": []
+        //         };
+
+        //         newCustApt.appointments.push(event);
+
+        //         // update DB
+        //         // add to event
+        //         event.customer = name;
+        //         // self.Booking.deleteEvent(event.id, self.eventList);
+        //         // self.eventList.push(event);
+        //         // self.Booking.deleteEvent(event.id, self.adminList);
+        //         // self.adminList.push(event);
+        //          for (var i = 0; i < self.eventList.length; i++) {
+        //             if (self.eventList[i].id == event.id) {
+        //                 self.eventList[i].customer = event.customer;
+        //             }
+        //         }
+        //         for (var i = 0; i < self.adminList.length; i++) {
+        //             if (self.adminList[i].id == event.id) {
+        //                 self.adminList[i].customer = event.customer;
+        //             }
+        //         }
+        //         console.log(self.eventList);
+        //     });
+        // });
+    
+    }
+
 
     customMessagePopUp(func, message,event){
         var self = this;
@@ -501,7 +721,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         const note = $('#note').val();
         const dateFrom = $('#dateFrom').val();
         const dateTo = $('#dateFrom').val();
-        // const dateTo = $('#dateTo').val();
         const timeFrom = $('#timeFrom').val();
         const timeTo = $('#timeFrom').val();
         // const timeTo = $('#timeTo').val();
@@ -521,23 +740,42 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         // console.log(start);
         // console.log(end);
         // ====================
+        var cost = 0;
+        var duration = 0;
+        var customer = event.customer == null? "":event.customer;
+        console.log(event);
+        console.log(customer);
+        console.log(event.customer);
+        for (var i = 0; i < self.services.length; i++) {
+            if (event_title == self.services[i].service) {
+                cost = self.services[i].cost;
+                duration = self.services[i].duration;
+            }
+        }
+
         var timeFromHour = parseInt(timeFrom.substring(0, 2));
         var timeFromMin = parseInt(timeFrom.substring(3, 5));
         var timeToHour = parseInt(timeTo.substring(0, 2));
-        var timeToMin = parseInt(timeTo.substring(3, 5)) + 30;
+        var timeToMin = parseInt(timeTo.substring(3, 5))+duration;
         // console.log(timeToMin);
         for (var i = 0; i < self.Booking.workingHours.length; i += 2) {
-            var morningFromHour = parseInt(self.Booking.workingHours[i].start.substring(0, 2));
-            var morningFromMin = parseInt(self.Booking.workingHours[i].start.substring(3, 5));
-            var morningToHour = parseInt(self.Booking.workingHours[i].end.substring(0, 2));
-            var morningToMin = parseInt(self.Booking.workingHours[i].end.substring(3, 5));
+            var temp1 = self.Booking.workingHours[i].start;
+            var temp2 = self.Booking.workingHours[i].end;
+            var temp3 = self.Booking.workingHours[i + 1].start;
+            var temp4 = self.Booking.workingHours[i + 1].end;
 
-            var afternoonFromHour = parseInt(self.Booking.workingHours[i + 1].start.substring(0, 2));
-            var afternoonFromMin = parseInt(self.Booking.workingHours[i + 1].start.substring(3, 5));
-            var afternoonToHour = parseInt(self.Booking.workingHours[i + 1].end.substring(0, 2));
-            var afternoonToMin = parseInt(self.Booking.workingHours[i + 1].end.substring(3, 5));
+            var morningFromHour = parseInt(temp1.substring(0, 2));
+            var morningFromMin = parseInt(temp1.substring(3, 5));
+            var morningToHour = parseInt(temp2.substring(0, 2));
+            var morningToMin = parseInt(temp2.substring(3, 5));
+
+            var afternoonFromHour = parseInt(temp3.substring(0, 2));
+            var afternoonFromMin = parseInt(temp3.substring(3, 5));
+            var afternoonToHour = parseInt(temp4.substring(0, 2));
+            var afternoonToMin = parseInt(temp4.substring(3, 5));
 
             var closed = self.Booking.checkClosed(timeFromHour, timeFromMin, timeToHour, timeToMin, morningFromHour, morningFromMin, morningToHour, morningToMin, afternoonFromHour, afternoonFromMin, afternoonToHour, afternoonToMin);
+
 
             if(closed){
                 swal(
@@ -571,6 +809,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
                     $calendar.fullCalendar('removeEvents', event.id);
                 }
+                
                 var k = 0;
                 for (var i = 0; i < times; i++) {
 
@@ -587,9 +826,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     var m = temp.monthly;
                     var a = temp.annually;
                     k = temp.K;
-                    // console.log(k);
-                    console.log(customStart);
-                    console.log(customEnd);
 
                     eventData = {
                         id: id,        //same for recurring events
@@ -600,9 +836,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                         end: customEnd,
                         displayDate: displayDate,
                         displayTime: displayTime,
-                        // customer: ,
-                        // duration: ,
-                        // cost: ,
+                        customer: customer,
+                        duration: duration,
+                        cost: cost,
                         className: customClass,     //color of the event (once:green, daily:azure,monthly:orange,annually:red)
                         recur: r,
                         daily: d,
@@ -612,16 +848,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                         order: i
                     };
 
+                    
                     self.eventList.push(eventData);
                     self.adminList.push(eventData);
-                    
 
                     // console.log(eventData);     //DEBUG
                     $calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
 
                     $calendar.fullCalendar('addEventSource', eventData);
 
-
+                    self.addCustomer(eventData);
                 }
 
 

@@ -29,3 +29,7 @@ form{
 .clickable{
     cursor: pointer;
 }
+
+.main-content{
+    margin-left:20em;
+}
