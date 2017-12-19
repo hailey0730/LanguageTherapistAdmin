@@ -43,7 +43,7 @@ breaks: (may have multiple breaks)
 
 
 event: (event id)	18attr
-
+(start, end are Date.toISOString())
 {
     "id": 101,
     "staff": "Tania Andrew",

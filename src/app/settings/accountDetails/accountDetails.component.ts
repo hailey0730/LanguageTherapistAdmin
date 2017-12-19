@@ -9,14 +9,16 @@ declare const $: any;
 @Component({
     selector: 'app-dashboard',
     templateUrl: './accountDetails.component.html',
-    styleUrls: ['./css/accountDetails.css'],
+    styleUrls: ['../css/subsidebar.css'],
     providers: [appService]
 })
 export class AccountDetailsComponent implements OnInit, AfterViewInit {
-    
+    weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     public admin: any;
     public adminPic: string;
     staffList = [];
+    services:any[] = [{"name":"service A","duration":30,"cost":150}, {"name":"service B","duration":60,"cost":300}];
     public workingHr: any[] = [moment(new Date(0, 0, 0, 9, 30)).format("HH:mm"), moment(new Date(0, 0, 0, 18, 0)).format("HH:mm")];
     public weeks: any[] = [{ day: 'Monday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
     { day: 'Tuesday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
@@ -32,6 +34,7 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
     { day: 'Friday', switch: true, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] },
     { day: 'Saturday', switch: false, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] },
     { day: 'Sunday', switch: false, durations: [{ from: this.workingHr[0], to: this.workingHr[1] }] }];
+    timeOffList: any[] = [{"id":501, "displayFrom": "26 Dec 2017, 8:00 am", "displayTo":"26 Dec 2017, 1:30 pm"}];
     private admininfoLink = 'http://testingtesttest.000webhostapp.com/adminInfo.php';
     private admininfoPostLink = 'http://testingtesttest.000webhostapp.com/adminInfo.json';
 
@@ -41,12 +44,12 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
     // constructor(private navbarTitleService: NavbarTitleService, private notificationService: NotificationService) { }
 
     public ngOnInit() {
+
        // set value of the input fields
         this.admin = {
             "id": 301,
             "img": "../assets/img/faces/avatar.jpg",
-            "fn": "Tania",
-            "ln": "Andrew",
+            "name": "Tania Andrew",
             "phone": "bd546139",
             "mobile": "66443347",
             "email": "hayhay0730@gmail.com",
@@ -56,6 +59,19 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
             "description": "some description"
         };
 
+        var self = this;
+        // set side bar selected
+        setTimeout(function () {
+            
+            $('.staffName').each(function (i, obj) {
+                if ($(this).text() == self.admin.name) {
+                    var li = $(this).parent().parent().parent();
+                    $(li).addClass('selected'); 
+                }
+            });
+
+        }, 1000);     //need to wait till customers are loaded on the subsidebar
+
         // account Details tab 
         this.adminPic = this.admin.img == "" ? "../../assets/img/placeholder.jpg" : this.admin.img;
         this.admin.img != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
@@ -63,8 +79,7 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
         var staff2 = {
             "id": 302,
             "img": "../assets/img/faces/avatar.jpg",
-            "fn": "John",
-            "ln": "Chan",
+            "name": "John Chan",
             "phone": "bd546139",
             "mobile": "66443347",
             "email": "hayhay0730@gmail.com",
@@ -142,6 +157,7 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
        
     }
 
+    // account details tab
     update(){
         swal({
             title: "Profile changed",
@@ -152,16 +168,15 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes'
         }).then((result) => {
-            this.admin[0] = $('#pic').val()==""?this.admin.img:$('#pic').val();
-            this.admin[1] = $('#fn').val();
-            this.admin[2] = $('#ln').val();
-            this.admin[3] = $('#phone').val();
-            this.admin[4] = $('#mobile').val();
-            this.admin[5] = $('#email').val();
-            this.admin[6] = $('#addr').val();
-            this.admin[7] = $('#city').val();
-            this.admin[8] = $('#country').val();
-            this.admin[9] = $('textarea').val();
+            this.admin.img = $('#pic').val()==""?this.admin.img:$('#pic').val();
+            this.admin.name = $('#name').val();
+            this.admin.phone = $('#phone').val();
+            this.admin.mobile = $('#mobile').val();
+            this.admin.email = $('#email').val();
+            this.admin.address = $('#addr').val();
+            this.admin.city = $('#city').val();
+            this.admin.country = $('#country').val();
+            this.admin.description = $('textarea').val();
            
             console.log(this.admin);        //DEBUG
 
@@ -177,13 +192,69 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
     }
 
     addStaff(){
+        var self = this;
+        swal({
+            title: 'Add New Staff',
+            html: '<input class="form-control" placeholder="Name" id="newName" >' +
+            '<input class="form-control" placeholder="E-mail" type="email" id="newEmail" >' +
+            '<input class="form-control" placeholder="Mobile" type="tel" id="newMobile" >',
+            showCancelButton: true,
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function (result: any) {
 
+            var name = $('#newName').val();
+            var email = $('#newEmail').val();
+            var mobile = $('#newMobile').val();
+            console.log(name);
+            console.log(email);
+            console.log(mobile);
+            const randomID = "104";
+
+            var newStaffInfo = {
+                "id": randomID,
+                "img": "../../assets/img/placeholder.jpg",
+                "name": name,
+                "phone": "",
+                "mobile": mobile,
+                "email": email,
+                "address": "",
+                "city": "",
+                "country": "",
+                "description": ""
+
+            }; 
+
+            self.staffList.push(newStaffInfo);
+
+            // update DB
+
+        });
     }
 
     displayStaff(event, id){
+        // unhighlight all
+        $('li').removeClass('selected');
+
+        // highlight selected
+        var li = event.target.closest('li');
+        $(li).addClass('selected');
+        var customer = $(event.target).text();
+        console.log(customer);
+
+        // change view
+        for (var i = 0; i < this.staffList.length; i++) {
+            if (this.staffList[i].id == id) {
+                this.admin = this.staffList[i];
+                break;
+            }
+        }
 
     }
 
+
+    // working hour tab
     updatewkhr() {
         swal({
             title: "Working hours changed",
@@ -220,6 +291,8 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
         })
     }
 
+
+    // break tab
     updateBreak() {
         swal({
             title: "Working hours changed",
@@ -352,5 +425,56 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
             }
         })
     }
+
+
+    // time off tab
+    addTimeOff(){
+        var today = new Date();
+        var self = this;
+        const fiveYearsBefore = today.getFullYear() - 5;
+        const fiveYearsAfter = today.getFullYear() + 5;
+        swal({
+            title: 'Add Time off',
+            html: '<div class="row">' +
+            '<label style="margin-right:5px">Start time</label>' +
+            '<input type="date" name="input" id="dateFrom" value="' + moment(today).format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required/>' +
+            '<input type="time" name="input" id="timeFrom" value="00:00:00" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+            '</div>'+
+            '<div class="row">' +
+            '<label style="margin-right:5px">End time</label>' +
+            '<input type="date" name="input" id="dateTo" value="' + moment(today).format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required/>' +
+            '<input type="time" name="input" id="timeTo" value="23:59:00" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
+            '</div>',
+            showCancelButton: true,
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function (result: any) {
+            const dateFrom = $('#dateFrom').val();
+            const dateTo = $('#dateTo').val();
+            const timeFrom = $('#timeFrom').val();
+            const timeTo = $('#timeTo').val();
+
+            var start = new Date(parseInt(dateFrom.substring(0, 4)), parseInt(dateFrom.substring(5, 7)) - 1, parseInt(dateFrom.substring(8, 10)), parseInt(timeFrom.substring(0, 2)), parseInt(timeFrom.substring(3,5)));
+            var end = new Date(parseInt(dateTo.substring(0, 4)), parseInt(dateTo.substring(5, 7)) - 1, parseInt(dateTo.substring(8, 10)), parseInt(timeTo.substring(0, 2)), parseInt(timeTo.substring(3, 5)));
+            const randomID = "104";
+
+            var toff = {
+                "id": randomID,
+                "displayFrom": start.getDate() + ' ' + self.month[start.getMonth()] + ' ' + start.getFullYear() + ', ' + moment(start).format("HH:mm"),
+                "displayTo": end.getDate() + ' ' + self.month[end.getMonth()] + ' ' + end.getFullYear() + ', ' + moment(end).format("HH:mm"),
+                "start":start,
+                "end":end
+            };
+
+            self.timeOffList.push(toff);
+
+
+            // update DB
+
+        });
+    }
+
+    viewTimeOff(id){}
    
 }

@@ -49,90 +49,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     public workdays = [];
     public adminList = [];
 
-    public JohnList =
-    [{
-        id: 601,
-        staff: 'John',
-        title: 'Testing other user view',
-        note: '',
-        start: new Date(this.y, this.m, this.d + 2, 19, 0),
-        end: new Date(this.y, this.m, this.d + 2, 22, 30),
-        allDay: false,
-        className: 'event-green',
-        recur: true,
-        daily: false,
-        monthly: false,
-        annually: false
-    }, {
-        id: 601,
-        staff: 'John',
-        title: 'Testing other user view',
-        note: '',
-        start: new Date(this.y, this.m, this.d + 3, 19, 0),
-        end: new Date(this.y, this.m, this.d + 3, 22, 30),
-        allDay: false,
-        className: 'event-green',
-        recur: true,
-        daily: false,
-        monthly: false,
-        annually: false
-    }, {
-        id: 601,
-        staff: 'John',
-        title: 'Testing other user view',
-        note: '',
-        start: new Date(this.y, this.m, this.d + 4, 19, 0),
-        end: new Date(this.y, this.m, this.d + 4, 22, 30),
-        allDay: false,
-        className: 'event-green',
-        recur: true,
-        daily: false,
-        monthly: false,
-        annually: false
-    }];
-
-    public MaryList =
-    [{
-        id: 601,
-        staff: 'Mary',
-        title: 'Testing other user view',
-        note: '',
-        start: new Date(this.y, this.m, this.d + 2, 19, 0),
-        end: new Date(this.y, this.m, this.d + 2, 22, 30),
-        allDay: false,
-        className: 'event-orange',
-        recur: true,
-        daily: false,
-        monthly: false,
-        annually: false
-    }, {
-        id: 601,
-        staff: 'Mary',
-        title: 'Testing other user view',
-        note: '',
-        start: new Date(this.y, this.m, this.d + 3, 19, 0),
-        end: new Date(this.y, this.m, this.d + 3, 22, 30),
-        allDay: false,
-        className: 'event-orange',
-        recur: true,
-        daily: false,
-        monthly: false,
-        annually:false
-    }, {
-        id: 601,
-        staff: 'Mary',
-        title: 'Testing other user view',
-        note: '',
-        start: new Date(this.y, this.m, this.d + 4, 19, 0),
-        end: new Date(this.y, this.m, this.d + 4, 22, 30),
-        allDay: false,
-        className: 'event-orange',
-        recur: true,
-        daily: false,
-        monthly: false,
-        annually:false
-    }];
-
+    public JohnList = [];
+    public MaryList = [];
+    
     // ==========end of testing events==================
 
     selectedUsers: string[];        //users'views
@@ -692,6 +611,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         var $calendar = $('#fullCalendar');
         this.appService.getJson(this.eventListlink).then((data) => {
             this.eventList = data;
+            this.JohnList = data;
+            this.MaryList = data;
             for (var i = 0; i < this.eventList.length; i++) {            //"2017-11-18T18:00:00"
                 // DEBUG
                 // console.log(this.eventList[i].start.substring(0, 4));        //year

@@ -27,123 +27,14 @@ export class CustomerComponent implements OnInit,AfterViewInit{
     public appointments: any;        //appointments to be shown on right
     public cost = 0;                //cost of appointments to be shown on right
     //all customers'appointments arrays
-    public allApts: any[] = [{"id":201,"appointments":[
-
-        {
-            "id": 101,
-            "staff": "Tania Andrew",
-            "title": "some service1",
-            "note": "test change note",
-            "start": "2017-11-14T15:00:00",
-            "end": "2017-11-14T15:30:00",
-            "displayDate": "Thu 14 Dec 2017",
-            "displayTime": "03:00pm - 03:30pm",
-            "customer": "Customer A",
-            "duration": "30min",
-            "cost": 150,
-            "className": "event-green",
-            "recur": false,
-            "daily": false,
-            "weekly": false,
-            "monthly": false,
-            "annually": false,
-            "order": 0
-        },
-        {
-            "id": 102,
-            "staff": "Tania Andrew",
-            "title": "some service2",
-            "note": "1",
-            "start": "2017-11-14T17:00:00",
-            "end": "2017-11-14T18:00:00",
-            "displayDate": "Thu 14 Dec 2017",
-            "displayTime": "05:00pm - 06:00pm",
-            "customer": "Customer A",
-            "duration": "60min",
-            "cost": 300,
-            "className": "event-green",
-            "recur": false,
-            "daily": false,
-            "weekly":false,
-            "monthly": false,
-            "annually": false,
-            "order": 0
-        }
-    ]},
-        {
-            "id": 202, "appointments":[
-
-            {
-                "id": 103,
-                "staff": "other staff",
-                "title": "some service1",
-                "note": "2",
-                "start": "2017-11-15T09:00:00",
-                "end": "2017-11-15T10:30:00",
-                "displayDate": "Thu 15 Dec 2017",
-                "displayTime": "09:00am - 10:30am",
-                "customer": "John",
-                "duration": "30min",
-                "cost": 150,
-                "className": "event-green",
-                "recur": false,
-                "daily": false,
-                "weekly": false,
-                "monthly": false,
-                "annually": false,
-                "order": 0
-            },
-            {
-                "id": 104,
-                "staff": "other staff2",
-                "title": "some service2",
-                "note": "3",
-                "start": "2017-11-17T17:00:00",
-                "end": "2017-11-17T18:00:00",
-                "displayDate": "Thu 17 Dec 2017",
-                "displayTime": "05:00pm - 06:00pm",
-                "customer": "John",
-                "duration": "60min",
-                "cost": 300,
-                "className": "event-green",
-                "recur": false,
-                "daily": false,
-                "weekly": false,
-                "monthly": false,
-                "annually": false,
-                "order": 0
-            }
-            ]
-        }, {
-            "id": 203, "appointments":[
-
-            {
-                "id": 103,
-                "staff": "other staff",
-                "title": "some service1",
-                "note": "4",
-                "start": "2017-11-15T09:00:00",
-                "end": "2017-11-15T10:30:00",
-                "displayDate": "Thu 15 Dec 2017",
-                "displayTime": "09:00am - 10:30am",
-                "customer": "Bob",
-                "duration": "30min",
-                "cost": 150,
-                "className": "event-green",
-                "recur": false,
-                "daily": false,
-                "weekly": false,
-                "monthly": false,
-                "annually": false,
-                "order": 0
-            }
-        ]}];
+    // public allApts: any[] = [];
 
    
     weekday = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     services = [{ "service": "some service1", "cost": 150, "duration": 30 }, { "service": "some service2", "cost": 240, "duration": 60 }]
     public adminPic: string;
+    eventListlink = 'http://testingtesttest.000webhostapp.com/eventList.php';
     private admininfoLink = 'http://testingtesttest.000webhostapp.com/adminInfo.php';
     private customersLink = 'http://testingtesttest.000webhostapp.com/customer.php';
 
@@ -154,67 +45,40 @@ export class CustomerComponent implements OnInit,AfterViewInit{
     // constructor(private navbarTitleService: NavbarTitleService, private notificationService: NotificationService) { }
 
     public ngOnInit() {
+        var today = new Date();
+        // console.log(today.toISOString());       //date can be stored in json in this form
+        // console.log(new Date(today.toISOString()));     //need to create new Date when get them and before use
+        // console.log(new Date("2017-12-14T15:00:00.448Z"));      //testing 
+
+        //below might needed in calendar to convert immediate displayable date in event obj
+        var aptdate = this.weekday[today.getDay()] + " " + today.getDate() + " " + this.month[today.getMonth()] + " " + today.getFullYear();
+
         var tempWkHr = this.Booking.calculateWorkingHours(this.Booking.businessHours, this.Booking.breakTime);
         this.Booking.workingHours = tempWkHr.workingHours;
         this.Booking.workdays = tempWkHr.workDays;
-        // set value of the input fields
+        
+        
+        this.appService.getJson(this.eventListlink).then((data) => {
+            this.appointments = data;
+            for (var i = 0; i < this.appointments.length; i++) {
+                // var tempstart = new Date(this.appointments[i].start);
+                var tempstart = new Date(parseInt(this.appointments[i].start.substring(0, 4)), parseInt(this.appointments[i].start.substring(5, 7)), parseInt(this.appointments[i].start.substring(8, 10)), parseInt(this.appointments[i].start.substring(11, 13)), parseInt(this.appointments[i].start.substring(14, 16)));
+                // var tempend = new Date(this.appointments[i].end);
+                var tempend = new Date(parseInt(this.appointments[i].end.substring(0, 4)), parseInt(this.appointments[i].end.substring(5, 7)), parseInt(this.appointments[i].end.substring(8, 10)), parseInt(this.appointments[i].end.substring(11, 13)), parseInt(this.appointments[i].end.substring(14, 16)));
+                this.appointments[i].start = tempstart;
+                this.appointments[i].end = tempend;
 
-        // this.appService.getJson(this.customersLink).then((data) => {
-        //     console.log(data);
-        //     this.customers = data;
-
-        for(var i = 0; i < this.allApts.length; i ++){
-            var temp = this.allApts[i].appointments;
-            
-            for(var j = 0; j < temp.length; j ++){
-                var tempstart = new Date(parseInt(temp[j].start.substring(0, 4)), parseInt(temp[j].start.substring(5, 7)), parseInt(temp[j].start.substring(8, 10)), parseInt(temp[j].start.substring(11, 13)), parseInt(temp[j].start.substring(14, 16)));
-                var tempend = new Date(parseInt(temp[j].end.substring(0, 4)), parseInt(temp[j].end.substring(5, 7)), parseInt(temp[j].end.substring(8, 10)), parseInt(temp[j].end.substring(11, 13)), parseInt(temp[j].end.substring(14, 16)));
-                temp[j].start = tempstart;
-                temp[j].end = tempend;
             }
-            
-        }
-            this.customers = [
-                {
-                    "id": 201,
-                    "img": "../assets/img/faces/avatar.jpg",
-                    "name": "Customer A",
-                    "phone": "bd546139",
-                    "mobile": "66443347",
-                    "email": "hayhay0730@gmail.com",
-                    "address": "somewhere over the rainbow",
-                    "city": "HK",
-                    "country": "China"
+        });
 
-                },
-                {
-                    "id": 202,
-                    "img": "../assets/img/faces/card-profile1-square.jpg",
-                    "name": "John",
-                    "phone": "bd546139",
-                    "mobile": "66443347",
-                    "email": "hayhay0730@gmail.com",
-                    "address": "somewhere over the rainbow",
-                    "city": "HK",
-                    "country": "China"
-
-                },
-                {
-                    "id": 203,
-                    "img": "../assets/img/faces/card-profile2-square.jpg",
-                    "name": "Bob",
-                    "phone": "bd546139",
-                    "mobile": "66443347",
-                    "email": "hayhay0730@gmail.com",
-                    "address": "somewhere over the rainbow",
-                    "city": "HK",
-                    "country": "China"
-                }
-            ];
-            
+        // default get the first customer
+        // this.customersLink + '?CustomerID=201'       //to get specific customer
+        this.appService.getJson(this.customersLink + '?CustomerID=0').then((data) => {
+            console.log(data);
+            this.customers = data;
                     
+            // this.displayCust = data;       //if use specific customer link
             this.displayCust = this.customers[0];       //default show the first customer
-            this.appointments =this.allApts[0].appointments;        //default show the first customer's appointments
             for(var i = 0; i < this.appointments.length; i ++){     //calculate cost of appointments
                 this.cost += this.appointments[i].cost;
             }
@@ -224,13 +88,7 @@ export class CustomerComponent implements OnInit,AfterViewInit{
             this.adminPic = this.displayCust.img == "" ? "../../assets/img/placeholder.jpg" : this.displayCust.img;
 
             this.displayCust.img != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
-        // });
-
-
-        var today = new Date();
-        //below might needed in calendar to convert immediate displayable date in event obj
-        var aptdate = this.weekday[today.getDay()] + " " + today.getDate() + " " + this.month[today.getMonth()] + " " + today.getFullYear();
-            
+        });
 
     }
 
@@ -447,10 +305,10 @@ export class CustomerComponent implements OnInit,AfterViewInit{
 
            self.customers.push(newCustInfo);
 
-           var newCustApt = {
-               "id": randomID, "appointments": []};
+        //    var newCustApt = {
+        //        "id": randomID, "appointments": []};
 
-            self.allApts.push(newCustApt);
+        //     self.allApts.push(newCustApt);
 
             // update DB
 
@@ -468,12 +326,13 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                 }
             }
         }
+
         // maybe not removing appointments immediately
-        for(var i = 0; i < this.allApts.length; i ++){
-            if(this.allApts[i].id == id){
-                this.allApts.splice(i,1);
-            }
-        }
+        // for(var i = 0; i < this.allApts.length; i ++){
+        //     if(this.allApts[i].id == id){
+        //         this.allApts.splice(i,1);
+        //     }
+        // }
     }
 
     displayCustomer(event, id){
@@ -487,6 +346,14 @@ export class CustomerComponent implements OnInit,AfterViewInit{
         console.log(customer);
 
         // change view
+        // this.customersLink + '?CustomerID=201'       //to get specific customer
+        // this.appService.getJson(this.customersLink + '?CustomerID=' + id).then((data) => {
+        //     console.log(data);
+        //     this.displayCust =data;
+        // });
+
+        // below is faster, will load part of array to be able to show on left
+        // and switch view will loop through the short array
         for(var i = 0; i < this.customers.length; i ++){
             if(this.customers[i].id == id){
                 this.displayCust = this.customers[i];
@@ -494,12 +361,12 @@ export class CustomerComponent implements OnInit,AfterViewInit{
             }
         }
 
-        for(var i = 0; i < this.allApts.length; i ++){
-            if(this.allApts[i].id == id){
-                this.appointments = this.allApts[i].appointments;
-                break;
-            }
-        }
+        // for(var i = 0; i < this.allApts.length; i ++){
+        //     if(this.allApts[i].id == id){
+        //         this.appointments = this.allApts[i].appointments;
+        //         break;
+        //     }
+        // }
         this.cost = 0;
         for(var i = 0; i < this.appointments.length; i ++){
             this.cost += this.appointments[i].cost;
@@ -658,12 +525,12 @@ export class CustomerComponent implements OnInit,AfterViewInit{
                     self.appointments.push(eventData);
 
                 }
-                for (var i = 0; i < this.allApts.length; i++) {
-                    if (this.allApts[i].id == id) {
-                        this.allApts[i].appointments = this.appointments;
-                        break;
-                    }
-                }
+                // for (var i = 0; i < this.allApts.length; i++) {
+                //     if (this.allApts[i].id == id) {
+                //         this.allApts[i].appointments = this.appointments;
+                //         break;
+                //     }
+                // }
 
                 this.cost = 0;
                 for (var i = 0; i < this.appointments.length; i++) {

@@ -1,0 +1,111 @@
+[{"id":201,"appointments":[
+
+        {
+            "id": 101,
+            "staff": "Tania Andrew",
+            "title": "some service1",
+            "note": "test change note",
+            "start": "2017-11-14T15:00:00",
+            "end": "2017-11-14T15:30:00",
+            "displayDate": "Thu 14 Dec 2017",
+            "displayTime": "03:00pm - 03:30pm",
+            "customer": "Customer A",
+            "duration": "30min",
+            "cost": 150,
+            "className": "event-green",
+            "recur": false,
+            "daily": false,
+            "weekly": false,
+            "monthly": false,
+            "annually": false,
+            "order": 0
+        },
+        {
+            "id": 102,
+            "staff": "Tania Andrew",
+            "title": "some service2",
+            "note": "1",
+            "start": "2017-11-14T17:00:00",
+            "end": "2017-11-14T18:00:00",
+            "displayDate": "Thu 14 Dec 2017",
+            "displayTime": "05:00pm - 06:00pm",
+            "customer": "Customer A",
+            "duration": "60min",
+            "cost": 300,
+            "className": "event-green",
+            "recur": false,
+            "daily": false,
+            "weekly":false,
+            "monthly": false,
+            "annually": false,
+            "order": 0
+        }
+    ]},
+        {
+            "id": 202, "appointments":[
+
+            {
+                "id": 103,
+                "staff": "other staff",
+                "title": "some service1",
+                "note": "2",
+                "start": "2017-11-15T09:00:00",
+                "end": "2017-11-15T10:30:00",
+                "displayDate": "Thu 15 Dec 2017",
+                "displayTime": "09:00am - 10:30am",
+                "customer": "John",
+                "duration": "30min",
+                "cost": 150,
+                "className": "event-green",
+                "recur": false,
+                "daily": false,
+                "weekly": false,
+                "monthly": false,
+                "annually": false,
+                "order": 0
+            },
+            {
+                "id": 104,
+                "staff": "other staff2",
+                "title": "some service2",
+                "note": "3",
+                "start": "2017-11-17T17:00:00",
+                "end": "2017-11-17T18:00:00",
+                "displayDate": "Thu 17 Dec 2017",
+                "displayTime": "05:00pm - 06:00pm",
+                "customer": "John",
+                "duration": "60min",
+                "cost": 300,
+                "className": "event-green",
+                "recur": false,
+                "daily": false,
+                "weekly": false,
+                "monthly": false,
+                "annually": false,
+                "order": 0
+            }
+            ]
+        }, {
+            "id": 203, "appointments":[
+
+            {
+                "id": 103,
+                "staff": "other staff",
+                "title": "some service1",
+                "note": "4",
+                "start": "2017-11-15T09:00:00",
+                "end": "2017-11-15T10:30:00",
+                "displayDate": "Thu 15 Dec 2017",
+                "displayTime": "09:00am - 10:30am",
+                "customer": "Bob",
+                "duration": "30min",
+                "cost": 150,
+                "className": "event-green",
+                "recur": false,
+                "daily": false,
+                "weekly": false,
+                "monthly": false,
+                "annually": false,
+                "order": 0
+            }
+        ]}]

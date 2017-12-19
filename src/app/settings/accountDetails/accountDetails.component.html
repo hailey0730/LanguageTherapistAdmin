@@ -31,7 +31,7 @@
                             </div>
                         
                             <div class="info">
-                                <a class="staffName" (click)="displayStaff($event, staff.id)">{{staff.fn}} {{staff.ln}}</a>
+                                <a class="staffName" (click)="displayStaff($event, staff.id)">{{staff.name}}</a>
                             </div>
                         </div>
                         <!-- <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs" (click)="removeCust($event, staff.id)">
@@ -61,6 +61,12 @@
                                     </a>
                                 </li>
                                 <li class="">
+                                    <a href="#services" data-toggle="tab">
+                                        <i class="material-icons">note</i> Services
+                                        <div class="ripple-container"></div>
+                                    </a>
+                                </li>
+                                <li class="">
                                     <a href="#wkhr" data-toggle="tab">
                                         <i class="material-icons">note</i> Working Hours
                                         <div class="ripple-container"></div>
@@ -69,6 +75,12 @@
                                 <li class="">
                                     <a href="#breaks" data-toggle="tab">
                                         <i class="material-icons">assessment</i> Breaks
+                                        <div class="ripple-container"></div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#timeOff" data-toggle="tab">
+                                        <i class="material-icons">assessment</i> Time Off
                                         <div class="ripple-container"></div>
                                     </a>
                                 </li>
@@ -113,16 +125,16 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group label-floating">
-                                                        <label class="control-label">First Name</label>
-                                                        <input type="text" class="form-control" id="fn" value="{{admin.fn}}">
+                                                        <label class="control-label">Name</label>
+                                                        <input type="text" class="form-control" id="name" value="{{admin.name}}">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <!-- <div class="col-md-6">
                                                     <div class="form-group label-floating">
                                                         <label class="control-label">Last Name</label>
                                                         <input type="text" class="form-control" id="ln" value="{{admin.ln}}">
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -185,6 +197,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane" id="services">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card card-profile">
+                                        <div class="card-avatar">
+                                            <a>
+                                                <img class="img" src="{{admin.img}}" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-content">
+                                        <h4 class="card-title">Services {{admin.name}} provides ( {{services.length}} ):</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="tab-pane" id="wkhr">
                         <div class="col-md-12">
                             <div class="card">
@@ -196,7 +224,7 @@
                                     </div>
                                 </div>
                                 <div class="card-content">
-                                    <h4 class="card-title">Working Hours of {{admin.fn}} {{admin.ln}}
+                                    <h4 class="card-title">Working Hours of {{admin.name}} 
                                         <!-- <small class="category">Complete your profile</small> -->
                                     </h4>
                                     <form>
@@ -238,7 +266,7 @@
                                         </div>
                                     </div>
                                     <div class="card-content">
-                                        <h4 class="card-title">Breaks for {{admin.fn}} {{admin.ln}}
+                                        <h4 class="card-title">Breaks for {{admin.name}}
                                         </h4>
                                         <div class="table-responsive">
                                             <table class="table" id="breakTable">
@@ -277,6 +305,40 @@
                                         <button type="submit" class="btn btn-rose pull-right" (click)="updateBreak()">Update Breaks</button>
                                         <div class="clearfix"></div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="timeOff">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card card-profile">
+                                        <div class="card-avatar">
+                                            <a>
+                                                <img class="img" src="{{admin.img}}" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <table class="table" *ngIf="admin != null;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width:20em;">Time off for {{admin.name}}</td>
+                                                <td class="pull-right">
+                                                    <button type="button" rel="tooltip" title="Add" class="btn btn-red btn-round btn-just-icon" (click)="addTimeOff()">
+                                                        <i class="material-icons">add</i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr class="clickable" *ngFor="let toff of timeOffList" (click)="viewTimeOff(toff.id)">
+                                                <td>
+                                                    <i class="material-icons">date_range</i>
+                                                </td>
+                                                <td>
+                                                    <div>{{toff.displayFrom}} to {{toff.displayTo}}</div>
+                                                </td>
+                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

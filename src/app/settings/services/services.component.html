@@ -1,0 +1,70 @@
+<div class="wrapper">
+    <div class="sidebar" data-active-color="white">
+        <div class="sidebar-wrapper">
+
+            <div class="user">
+                <form role="search">
+                   <h4>Categories ( )</h4> <!-- categories length -->
+                    <button type="button" rel="tooltip" title="Add" class="btn btn-danger btn-simple btn-xs" (click)="addCustomer()">
+                        <i class="material-icons">add</i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="nav-container">
+                <ul class="nav">
+
+                    <!-- list of categories -->
+                    <!-- <li *ngFor="let cust of services; let i = index;" id="{{ 'subsidebar-' + i }}">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="optionsCheckboxes">
+                            </label>
+                        </div>
+                        <a class="customerName" (click)="displayCustomer($event, cust.id)">{{cust.name}}</a>
+                        <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs" (click)="removeCust($event, cust.id)">
+                            <i class="material-icons">delete</i>
+                        </button>
+
+                    </li> -->
+
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card">
+                    <table class="table" *ngIf="admin != null;">
+                        <tbody>
+                            <tr>
+                                <td style="width:20em;"><h4>All Services</h4></td>
+                                <td class="pull-right">
+                                    <button type="button" rel="tooltip" title="Add" class="btn btn-red btn-round btn-just-icon" (click)="addTimeOff()">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- <tr class="clickable" *ngFor="let toff of timeOffList" (click)="viewTimeOff(toff.id)">
+                                <td>
+                                    <i class="material-icons">date_range</i>
+                                </td>
+                                <td>
+                                    <div>{{toff.displayFrom}} to {{toff.displayTo}}</div>
+                                </td>
+                    
+                            </tr> -->
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
