@@ -10,13 +10,16 @@ import { ServicesComponent } from './services/services.component';
 import { SettingsRoutes } from './settings.routing';
 // import { GridSystemComponent } from './grid/grid.component';
 import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { MaterialModule, MdSelectModule } from '@angular/material';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule.forChild(SettingsRoutes),
         FormsModule,
-        MyDateRangePickerModule
+        MyDateRangePickerModule,
+        MaterialModule,
+        MdSelectModule
     ],
     declarations: [
         AccountDetailsComponent,

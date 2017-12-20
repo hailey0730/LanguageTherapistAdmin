@@ -40,6 +40,16 @@ breaks: (may have multiple breaks)
 	{ day: 'Sunday', switch: false, durations: [{ from: "12:00", to: "13:30" }]}]
 }
 
+time off: (time off id)
+
+{
+	"id": id,
+    "displayFrom": start.getDate() + ' ' + self.month[start.getMonth()] + ' ' + start.getFullYear() + ', ' + moment(start).format("HH:mm"),
+    "displayTo": end.getDate() + ' ' + self.month[end.getMonth()] + ' ' + end.getFullYear() + ', ' + moment(end).format("HH:mm"),
+    "start":start,
+    "end":end
+}
+
 
 
 event: (event id)	18attr
@@ -79,4 +89,19 @@ customer: (customer id)
     "city":"HK",
     "country":"China"
     
-  }       
+  }
+
+
+
+service: (service id)       
+
+{
+	"id":401, 
+	"categories":["cat 1"],
+	"name":"service A",
+	"duration":30,
+	"cost":150, 
+	"description":"",
+	"staff":["Tania Andrew"],
+	"img":"../../assets/img/placeholder.jpg"
+}

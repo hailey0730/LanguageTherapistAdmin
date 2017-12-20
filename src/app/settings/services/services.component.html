@@ -4,7 +4,7 @@
 
             <div class="user">
                 <form role="search">
-                   <h4>Categories ( )</h4> <!-- categories length -->
+                   <h4>Categories ( {{categories.length}} )</h4> <!-- categories length -->
                     <button type="button" rel="tooltip" title="Add" class="btn btn-danger btn-simple btn-xs" (click)="addCustomer()">
                         <i class="material-icons">add</i>
                     </button>
@@ -13,20 +13,13 @@
 
             <div class="nav-container">
                 <ul class="nav">
-
+                    <li class="clickable" id="subsidebar">
+                        <a class="catName" (click)="displayCat($event, 'All services')">All services</a>
+                    </li>
                     <!-- list of categories -->
-                    <!-- <li *ngFor="let cust of services; let i = index;" id="{{ 'subsidebar-' + i }}">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="optionsCheckboxes">
-                            </label>
-                        </div>
-                        <a class="customerName" (click)="displayCustomer($event, cust.id)">{{cust.name}}</a>
-                        <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-simple btn-xs" (click)="removeCust($event, cust.id)">
-                            <i class="material-icons">delete</i>
-                        </button>
-
-                    </li> -->
+                    <li class="clickable" *ngFor="let cat of categories; let i = index;" id="{{ 'subsidebar-' + i }}">
+                        <a class="catName" (click)="displayCat($event, cat)">{{cat}}</a>
+                    </li>
 
                 </ul>
             </div>
@@ -36,31 +29,202 @@
     </div>
     <div class="main-content">
         <div class="container-fluid">
-            <div class="row">
-
-                <div class="col-md-12">
-                    <div class="card">
-                    <table class="table" *ngIf="admin != null;">
+            <div class="tab-content">
+                <div class="tab-pane active" id="main">
+                    <div class="col-md-12">
+                        <div class="card">
+                    <table class="table">
                         <tbody>
                             <tr>
-                                <td style="width:20em;"><h4>All Services</h4></td>
+                                <td style="width:20em;"><h4>{{displayCategory}}</h4></td>
                                 <td class="pull-right">
-                                    <button type="button" rel="tooltip" title="Add" class="btn btn-red btn-round btn-just-icon" (click)="addTimeOff()">
+                                     <a href="#addService" data-toggle="tab">
                                         <i class="material-icons">add</i>
-                                    </button>
+                                     </a>
                                 </td>
                             </tr>
-                            <!-- <tr class="clickable" *ngFor="let toff of timeOffList" (click)="viewTimeOff(toff.id)">
+                            <tr class="clickable" *ngFor="let dService of displayServices" (click)="viewService(dService.id)">
                                 <td>
                                     <i class="material-icons">date_range</i>
                                 </td>
                                 <td>
-                                    <div>{{toff.displayFrom}} to {{toff.displayTo}}</div>
+                                    <div><h4>{{dService.name}}</h4></div>
+                                    <div class="grey">{{dService.duration}} min  $ {{dService.cost}} </div>
                                 </td>
-                    
-                            </tr> -->
+                            </tr>
                         </tbody>
                     </table>
+                    </div>
+                </div>
+                </div>
+
+                <div class="tab-pane" id="addService">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card card-profile">
+                                <div id="picDiv" class="fileinput text-center" data-provides="fileinput">
+                                        <div class="fileinput-new thumbnail img-circle">
+                                            <img src="../../assets/img/placeholder.jpg" alt="...">
+                                        </div>
+                                        <div class="fileinput-exists thumbnail img-circle">
+                                            <!-- <img src="{{.img}}" alt="..."> -->
+                                        </div>
+                                        <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
+                                        <div>
+                                            <span class="btn btn-round btn-rose btn-file">
+                                                <span class="fileinput-exists">Change</span>
+                                                <span class="fileinput-new">Add Photo</span>
+                                                <input type="file" id="pic" name="..." />
+                                            </span>
+                                            <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput">
+                                                <i class="fa fa-times"></i> Remove</a>
+                                        </div>
+                                </div>
+                            
+                            </div>
+                            <div class="card-content">
+                                <form >
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Service Name</label>
+                                                <input type="text" class="form-control" id="name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Service Description</label>
+                                                <input type="text" class="form-control" id="description">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Service Cost ($)</label>
+                                                <input type="number" class="form-control" id="cost">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Service duration (min)</label>
+                                                <input type="number" class="form-control" id="duration">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <md-select multiple [color]="selectTheme" placeholder="Category" [(ngModel)]="selectedCat" name="cat">
+                                                <md-option *ngFor="let cat of categories" [value]="cat">
+                                                    {{ cat }}
+                                                </md-option>
+                                            </md-select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <md-select multiple [color]="selectTheme" placeholder="Staff who provide this service" [(ngModel)]="selectedStaff" name="staff">
+                                                <md-option *ngFor="let staff of staffList" [value]="staff">
+                                                    {{ staff }}
+                                                </md-option>
+                                            </md-select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                    <button type="submit" class="btn btn-danger pull-right" (click)="cancel()">Cancel</button>
+                                    <button type="submit" class="btn btn-success pull-right" (click)="updateService(0)">Add New</button>
+                                    <div class="clearfix"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="viewService">
+                    <div class="col-md-12">
+                        <div class="card" *ngIf="displayService != null;">
+                            <div class="card-header">
+                                <a href="#main" data-toggle="tab">
+                                    < {{displayCategory}} </a>
+                                <a class="clickable pull-right" (click)="removeService($event, displayService.id)">
+                                    <i class="material-icons">delete</i> Delete Staff
+                                    <div class="ripple-container"></div>
+                                </a>
+                            </div>
+                            <div class="card card-profile">
+                                <div id="picDiv" class="fileinput text-center" data-provides="fileinput">
+                                    <div class="fileinput-new thumbnail img-circle">
+                                        <img src="../../assets/img/placeholder.jpg" alt="...">
+                                    </div>
+                                    <div class="fileinput-exists thumbnail img-circle">
+                                        <!-- <img src="{{.img}}" alt="..."> -->
+                                    </div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
+                                    <div>
+                                        <span class="btn btn-round btn-rose btn-file">
+                                            <span class="fileinput-exists">Change</span>
+                                            <span class="fileinput-new">Add Photo</span>
+                                            <input type="file" id="pic" name="..." />
+                                        </span>
+                                        <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput">
+                                            <i class="fa fa-times"></i> Remove</a>
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            <div class="card-content">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Service Name</label>
+                                                <input type="text" class="form-control" value="{{displayService.name}}" id="name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Service Description</label>
+                                                <input type="text" class="form-control" value="{{displayService.description}}" id="description">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Service Cost ($)</label>
+                                                <input type="number" class="form-control" value="{{displayService.cost}}" id="cost">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Service duration (min)</label>
+                                                <input type="number" class="form-control" value="{{displayService.duration}}" id="duration">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <md-select multiple [color]="selectTheme" placeholder="Category" [(ngModel)]="displayService.categories" name="cat">
+                                                <md-option *ngFor="let cat of categories" [value]="cat">
+                                                    {{ cat }}
+                                                </md-option>
+                                            </md-select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <md-select multiple [color]="selectTheme" placeholder="Staff who provide this service" [(ngModel)]="displayService.staff" name="staff">
+                                                <md-option *ngFor="let staff of staffList" [value]="staff">
+                                                    {{ staff }}
+                                                </md-option>
+                                            </md-select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <button type="submit" class="btn btn-danger pull-right" (click)="cancel()">Cancel</button>
+                                        <button type="submit" class="btn btn-success pull-right" (click)="updateService(displayService.id)">Save</button>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

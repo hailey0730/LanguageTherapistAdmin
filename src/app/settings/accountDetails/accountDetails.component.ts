@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 import { appService } from '../../app.service';
+import { Booking } from '../../bookingSystem/booking';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
 declare const swal: any;
@@ -10,7 +11,7 @@ declare const $: any;
     selector: 'app-dashboard',
     templateUrl: './accountDetails.component.html',
     styleUrls: ['../css/subsidebar.css'],
-    providers: [appService]
+    providers: [appService, Booking]
 })
 export class AccountDetailsComponent implements OnInit, AfterViewInit {
     weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -18,7 +19,9 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
     public admin: any;
     public adminPic: string;
     staffList = [];
-    services:any[] = [{"name":"service A","duration":30,"cost":150}, {"name":"service B","duration":60,"cost":300}];
+    services:any[] = [
+        {"id":401, "categories":["cat 1"],"name":"service A","duration":30,"cost":150, "description":"","staff":["Tania Andrew"]}, 
+        {"id":402,"categories":[],"name":"service B","duration":60,"cost":300,"description":"","staff":["John Chan","Tania Andrew"]}];
     public workingHr: any[] = [moment(new Date(0, 0, 0, 9, 30)).format("HH:mm"), moment(new Date(0, 0, 0, 18, 0)).format("HH:mm")];
     public weeks: any[] = [{ day: 'Monday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
     { day: 'Tuesday', switch: true, from: this.workingHr[0], to: this.workingHr[1] },
@@ -38,7 +41,7 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
     private admininfoLink = 'http://testingtesttest.000webhostapp.com/adminInfo.php';
     private admininfoPostLink = 'http://testingtesttest.000webhostapp.com/adminInfo.json';
 
-    constructor(private appService: appService) {
+    constructor(private appService: appService, private Booking: Booking) {
         
     }
     // constructor(private navbarTitleService: NavbarTitleService, private notificationService: NotificationService) { }
@@ -70,11 +73,13 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
                 }
             });
 
+            this.adminPic = this.admin.img == "" ? "../../assets/img/placeholder.jpg" : this.admin.img;
+            this.admin.img != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
+
         }, 1000);     //need to wait till customers are loaded on the subsidebar
 
         // account Details tab 
-        this.adminPic = this.admin.img == "" ? "../../assets/img/placeholder.jpg" : this.admin.img;
-        this.admin.img != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
+        
 
         var staff2 = {
             "id": 302,
@@ -240,8 +245,13 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
         // highlight selected
         var li = event.target.closest('li');
         $(li).addClass('selected');
-        var customer = $(event.target).text();
-        console.log(customer);
+
+        // go back to account detail tab
+        $('li').removeClass('active');
+        $('#default-tab').addClass('active');
+        $('.tab-pane').removeClass('active');
+        $('#acDetail').addClass('active');
+        
 
         // change view
         for (var i = 0; i < this.staffList.length; i++) {
@@ -251,6 +261,64 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
             }
         }
 
+        // need to update list of services, working hours, breaks and time off too
+
+    }
+
+    removeStaff(event, id) {
+        $('.tab-pane').removeClass('active');
+        $('#acDetail').addClass('active');
+
+        swal({
+            title: "Delete staff",
+            text: "Are you sure you want to delete this staff?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+        
+            for (var i = 0; i < this.staffList.length; i++) {
+                if (this.staffList[i].id == id) {
+                    this.staffList.splice(i, 1);
+                    if (this.admin.id == id) {
+                        this.admin = this.staffList[0];
+                        $('li').removeClass('selected');
+                        $('#subsidebar-0').addClass('selected');
+                    }
+                }
+            }
+        });
+    }
+
+
+    // services tab
+    initService(admin){
+        
+        $('input[name = "servicesCheckbox"]').prop("checked", false);
+        
+        for (var i = 0; i < this.services.length; i++) {
+            var staff = this.services[i].staff;
+            for (var j = 0; j < staff.length; j++) {
+                var id = '#checkbox-' + this.services[i].id;
+                if (staff[j] == admin) {
+                    $(id).prop("checked", true);
+                }
+            }
+        }
+    }
+
+    checkAll(event){
+        const all = $('input[name = "all"]:checked').val();
+        
+        if(all){
+            // check all boxes
+            $('input[name = "servicesCheckbox"]').prop("checked",true);
+        }else{
+            // uncheck all boxes
+            $('input[name = "servicesCheckbox"]').prop("checked", false);
+        }
     }
 
 
@@ -430,19 +498,39 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
     // time off tab
     addTimeOff(){
         var today = new Date();
+        this.processingTimeOff(0, moment(today).format("YYYY-MM-DD"), moment(today).format("YYYY-MM-DD"));
+    }
+
+    viewTimeOff(id){
+        var toff;
+        for (var i = 0; i < this.timeOffList.length; i++) {
+            if (this.timeOffList[i].id == id) {
+                toff = this.timeOffList[i];
+            }
+        }
+
+        this.Booking.deleteEvent(id, this.timeOffList);
+        this.processingTimeOff(id, moment(toff.start).format("YYYY-MM-DD"), moment(toff.end).format("YYYY-MM-DD") );
+    }
+
+    processingTimeOff(id, start,end){
+        var today = new Date();
         var self = this;
         const fiveYearsBefore = today.getFullYear() - 5;
         const fiveYearsAfter = today.getFullYear() + 5;
+        const randomID = "104";
+        var toffid = id!=0?id:randomID;
+
         swal({
             title: 'Add Time off',
             html: '<div class="row">' +
             '<label style="margin-right:5px">Start time</label>' +
-            '<input type="date" name="input" id="dateFrom" value="' + moment(today).format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required/>' +
+            '<input type="date" name="input" id="dateFrom" value="' + start + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required/>' +
             '<input type="time" name="input" id="timeFrom" value="00:00:00" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
-            '</div>'+
+            '</div>' +
             '<div class="row">' +
             '<label style="margin-right:5px">End time</label>' +
-            '<input type="date" name="input" id="dateTo" value="' + moment(today).format("YYYY-MM-DD") + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required/>' +
+            '<input type="date" name="input" id="dateTo" value="' + end + '" placeholder="yyyy-MM-dd" min="' + fiveYearsBefore + '-01-01" max="' + fiveYearsAfter + '-12-31" required/>' +
             '<input type="time" name="input" id="timeTo" value="23:59:00" placeholder="08:00:AM" min="08:00:00" max="17:00:00" required/>' +
             '</div>',
             showCancelButton: true,
@@ -455,26 +543,23 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
             const timeFrom = $('#timeFrom').val();
             const timeTo = $('#timeTo').val();
 
-            var start = new Date(parseInt(dateFrom.substring(0, 4)), parseInt(dateFrom.substring(5, 7)) - 1, parseInt(dateFrom.substring(8, 10)), parseInt(timeFrom.substring(0, 2)), parseInt(timeFrom.substring(3,5)));
+            var start = new Date(parseInt(dateFrom.substring(0, 4)), parseInt(dateFrom.substring(5, 7)) - 1, parseInt(dateFrom.substring(8, 10)), parseInt(timeFrom.substring(0, 2)), parseInt(timeFrom.substring(3, 5)));
             var end = new Date(parseInt(dateTo.substring(0, 4)), parseInt(dateTo.substring(5, 7)) - 1, parseInt(dateTo.substring(8, 10)), parseInt(timeTo.substring(0, 2)), parseInt(timeTo.substring(3, 5)));
-            const randomID = "104";
 
-            var toff = {
-                "id": randomID,
+            var newToff = {
+                "id": toffid,
                 "displayFrom": start.getDate() + ' ' + self.month[start.getMonth()] + ' ' + start.getFullYear() + ', ' + moment(start).format("HH:mm"),
                 "displayTo": end.getDate() + ' ' + self.month[end.getMonth()] + ' ' + end.getFullYear() + ', ' + moment(end).format("HH:mm"),
-                "start":start,
-                "end":end
+                "start": start,
+                "end": end
             };
 
-            self.timeOffList.push(toff);
-
-
+            self.timeOffList.push(newToff);
             // update DB
 
         });
-    }
 
-    viewTimeOff(id){}
+
+    }
    
 }

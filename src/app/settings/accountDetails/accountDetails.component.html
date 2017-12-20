@@ -54,13 +54,13 @@
                     <div class="nav-tabs-navigation">
                         <div class="nav-tabs-wrapper">
                             <ul class="nav nav-tabs" data-tabs="tabs">
-                                <li class="active">
+                                <li id="default-tab" class="active">
                                     <a href="#acDetail" data-toggle="tab">
                                         <i class="material-icons">date_range</i> Account Details
                                         <div class="ripple-container"></div>
                                     </a>
                                 </li>
-                                <li class="">
+                                <li class="" (click)="initService(admin.name)">
                                     <a href="#services" data-toggle="tab">
                                         <i class="material-icons">note</i> Services
                                         <div class="ripple-container"></div>
@@ -84,12 +84,19 @@
                                         <div class="ripple-container"></div>
                                     </a>
                                 </li>
+                                <li>
+                                    <a class="clickable" (click)="removeStaff($event, admin.id)">
+                                        <i class="material-icons">delete</i> Delete Staff
+                                        <div class="ripple-container"></div>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
+                    
                 </div>
                 <div class="card-content">
-                    <div class="tab-content">
+                    <div class="tab-content" *ngIf="admin != null;">
                         <div class="tab-pane active" id="acDetail">
                             <div class="col-md-12">
                                 <div class="card">
@@ -209,6 +216,39 @@
                                     </div>
                                     <div class="card-content">
                                         <h4 class="card-title">Services {{admin.name}} provides ( {{services.length}} ):</h4>
+                                        <table class="table" *ngIf="admin != null;">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="all" (change)="checkAll($event);">
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>All services</td>
+                                                </tr>
+                                                <tr *ngFor="let service of services">
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="servicesCheckbox" id="{{ 'checkbox-' + service.id }}" >
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>{{service.name}}</div>
+                                                    </td>
+                                                    <td>
+                                                        <div>{{service.duration}} min</div>
+                                                    </td>
+                                                    <td>
+                                                       <div>$ {{service.cost}}</div>
+                                                    </td>
+                                        
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
