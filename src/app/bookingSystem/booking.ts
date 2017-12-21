@@ -19,6 +19,9 @@ export class Booking{
     ];
     public workingHours = [];
     public workdays = [];
+    public custStaffHtmlTemp = '<input class="form-control" placeholder="Name" id="newName" >' +
+    '<input class="form-control" placeholder="E-mail" type="email" id="newEmail" >' +
+    '<input class="form-control" placeholder="Mobile" type="tel" id="newMobile" >';
 
 
 
@@ -168,6 +171,45 @@ export class Booking{
                 return obj;
             }
         }
+    }
+
+
+    // input: (customer/staff/service category)str, obj structure, list 
+    public addNew(obj, htmlTemp, objTemplate, list){
+        var title = 'Add New '+ obj;
+        swal({
+            title: title,
+            html: htmlTemp,
+            showCancelButton: true,
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function (result: any) {
+
+            var name = $('#newName').val();
+            var email = $('#newEmail').val();
+            var mobile = $('#newMobile').val();
+            console.log(name);
+            console.log(email);
+            console.log(mobile);
+            const randomID = "104";
+
+           
+
+            if(obj != "Category"){
+                objTemplate.id = randomID;
+                objTemplate.name = name;
+                objTemplate.mobile = mobile;
+                objTemplate.email = email;
+            }else{
+                objTemplate = name;
+            }
+
+            list.push(objTemplate);
+
+            // update DB
+
+        });
     }
 
     //input: (id)int, array

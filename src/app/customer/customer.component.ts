@@ -270,40 +270,44 @@ export class CustomerComponent implements OnInit,AfterViewInit{
     }
 
     addCustomer(){
-        var self = this;
-        swal({
-            title: 'Add New Customer',
-            html: '<input class="form-control" placeholder="Name" id="newName" >' +
-            '<input class="form-control" placeholder="E-mail" type="email" id="newEmail" >' + 
-            '<input class="form-control" placeholder="Mobile" type="tel" id="newMobile" >',
-            showCancelButton: true,
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger',
-            buttonsStyling: false
-        }).then(function (result: any) {
 
-            var name = $('#newName').val();
-            var email = $('#newEmail').val();
-            var mobile = $('#newMobile').val();
-            console.log(name);
-            console.log(email);
-           console.log(mobile);
-           const randomID = "104";
+        var newCustInfo = {
+            "id": 0,
+            "img": "../../assets/img/placeholder.jpg",
+            "name": "",
+            "phone": "",
+            "mobile": '',
+            "email": "",
+            "address": "",
+            "city": "",
+            "country": ""
 
-           var newCustInfo = {
-               "id": randomID,
-               "img": "../../assets/img/placeholder.jpg",
-               "name": name,
-               "phone": "",
-               "mobile": mobile,
-               "email": email,
-               "address": "",
-               "city": "",
-               "country": ""
+        };
 
-           };
+        this.Booking.addNew("Customer", this.Booking.custStaffHtmlTemp, newCustInfo,this.customers);
+        // var self = this;
+        // swal({
+        //     title: 'Add New Customer',
+        //     html: '<input class="form-control" placeholder="Name" id="newName" >' +
+        //     '<input class="form-control" placeholder="E-mail" type="email" id="newEmail" >' + 
+        //     '<input class="form-control" placeholder="Mobile" type="tel" id="newMobile" >',
+        //     showCancelButton: true,
+        //     confirmButtonClass: 'btn btn-success',
+        //     cancelButtonClass: 'btn btn-danger',
+        //     buttonsStyling: false
+        // }).then(function (result: any) {
 
-           self.customers.push(newCustInfo);
+        //     var name = $('#newName').val();
+        //     var email = $('#newEmail').val();
+        //     var mobile = $('#newMobile').val();
+        //     console.log(name);
+        //     console.log(email);
+        //    console.log(mobile);
+        //    const randomID = "104";
+
+           
+
+        //    self.customers.push(newCustInfo);
 
         //    var newCustApt = {
         //        "id": randomID, "appointments": []};
@@ -312,7 +316,7 @@ export class CustomerComponent implements OnInit,AfterViewInit{
 
             // update DB
 
-        });
+        // });
     }
 
     removeCust(event, id){

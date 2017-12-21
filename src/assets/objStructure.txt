@@ -72,7 +72,8 @@ event: (event id)	18attr
     "weekly":false,
     "monthly": false,
     "annually":false,
-    "order":0
+    "order":0,
+    "complete":true
 }
 
 
@@ -104,4 +105,15 @@ service: (service id)
 	"description":"",
 	"staff":["Tania Andrew"],
 	"img":"../../assets/img/placeholder.jpg"
+}
+
+
+
+activityLog: (log id)
+
+{
+	"id":501,
+	"action":"New"/"Update",
+	"actionTime":new Date().toISOString(),
+	"message":"New Customer has been added."
 }

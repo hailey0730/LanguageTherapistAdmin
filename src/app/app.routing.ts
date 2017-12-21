@@ -7,17 +7,18 @@ export const AppRoutes: Routes = [
     // default home page
     {
         path: '',
-        redirectTo:'calendar',
+        redirectTo:'dashboard',
         pathMatch:'full',
     },
     {
       path: '',
       component: AdminLayoutComponent,
       children: [
-    //       {
-    //     path: '',
-    //     loadChildren: './dashboard/dashboard.module#DashboardModule'
-    // }, {
+          {
+        path: 'dashboard',
+        loadChildren: './dashboard/dashboard.module#DashboardModule'
+    },
+    //  {
     //     path: 'components',
     //     loadChildren: './components/components.module#ComponentsModule'
     // }

@@ -26,6 +26,7 @@ export class ServicesComponent implements OnInit, AfterViewInit {
         { "id": 401, "categories": [ "cat 1"], "name": "service A", "duration": 30, "cost": 150, "description": "", "staff": ["Tania Andrew"] },
         { "id": 402, "categories": [], "name": "service B", "duration": 60, "cost": 300, "description": "", "staff": ["John Chan", "Tania Andrew"] }];
     staffList:any[] = ["Tania Andrew","John Chan"];
+    catHtmlTemp = '<input class="form-control" placeholder="Category Name" id="newName" >' ;
    
     constructor(private appService: appService, private Booking: Booking) {
         
@@ -69,6 +70,12 @@ export class ServicesComponent implements OnInit, AfterViewInit {
         }
     }
 
+    addCategory(){
+        var newCat = "";
+
+        this.Booking.addNew("Category", this.catHtmlTemp, newCat, this.categories);
+    }
+
     updateService(id){
         var img = $('#pic').val() == "" ? "../../assets/img/placeholder.jpg" : $('#pic').val();
         var name = $('#name').val();
@@ -94,11 +101,12 @@ export class ServicesComponent implements OnInit, AfterViewInit {
                     staffModel = this.services[i].staff;
                 }
             }
-            img == ""&&oldService.img;
-            name == ""&&oldService.name;
-            description == ""&&oldService.description;
-            duration == '' &&oldService.duration;
-            cost == ""&&oldService.cost;
+            
+            img = img == ""&&oldService.img;
+            name = name == ""&&oldService.name;
+            description = description == ""&&oldService.description;
+            duration = duration == '' &&oldService.duration;
+            cost = cost == ""&&oldService.cost;
 
             this.Booking.deleteEvent(id, this.services);
         }
@@ -115,13 +123,13 @@ export class ServicesComponent implements OnInit, AfterViewInit {
         }
 
         this.services.push(newService);
-        console.log(name);      //DEBUG
         
         // console.log(catModel);      //DEBUG
         // console.log(staffModel);    //DEBUG
         $('.tab-pane').removeClass('active');
         $('#main').addClass('active');
        
+        // update DB
     }
 
 
@@ -136,9 +144,6 @@ export class ServicesComponent implements OnInit, AfterViewInit {
         
     }
 
-    processingService(id){
-
-    }
 
     removeService(event, id){
         $('.tab-pane').removeClass('active');

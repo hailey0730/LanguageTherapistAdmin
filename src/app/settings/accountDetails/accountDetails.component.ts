@@ -62,6 +62,8 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
             "description": "some description"
         };
 
+        
+
         var self = this;
         // set side bar selected
         setTimeout(function () {
@@ -72,10 +74,8 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
                     $(li).addClass('selected'); 
                 }
             });
-
-            this.adminPic = this.admin.img == "" ? "../../assets/img/placeholder.jpg" : this.admin.img;
-            this.admin.img != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');
-
+            // console.log(self.admin);        //DEBUG
+            self.admin.img != "" ? $('#picDiv').addClass('fileinput-exists') : $('#picDiv').addClass('fileinput-new');            
         }, 1000);     //need to wait till customers are loaded on the subsidebar
 
         // account Details tab 
@@ -197,45 +197,62 @@ export class AccountDetailsComponent implements OnInit, AfterViewInit {
     }
 
     addStaff(){
-        var self = this;
-        swal({
-            title: 'Add New Staff',
-            html: '<input class="form-control" placeholder="Name" id="newName" >' +
-            '<input class="form-control" placeholder="E-mail" type="email" id="newEmail" >' +
-            '<input class="form-control" placeholder="Mobile" type="tel" id="newMobile" >',
-            showCancelButton: true,
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger',
-            buttonsStyling: false
-        }).then(function (result: any) {
 
-            var name = $('#newName').val();
-            var email = $('#newEmail').val();
-            var mobile = $('#newMobile').val();
-            console.log(name);
-            console.log(email);
-            console.log(mobile);
-            const randomID = "104";
+        var newStaffInfo = {
+            "id": 0,
+            "img": "../../assets/img/placeholder.jpg",
+            "name": "",
+            "phone": "",
+            "mobile": "",
+            "email": "",
+            "address": "",
+            "city": "",
+            "country": "",
+            "description": ""
 
-            var newStaffInfo = {
-                "id": randomID,
-                "img": "../../assets/img/placeholder.jpg",
-                "name": name,
-                "phone": "",
-                "mobile": mobile,
-                "email": email,
-                "address": "",
-                "city": "",
-                "country": "",
-                "description": ""
+        };
 
-            }; 
+        this.Booking.addNew("Staff", this.Booking.custStaffHtmlTemp, newStaffInfo, this.staffList);
 
-            self.staffList.push(newStaffInfo);
+        // var self = this;
+        // swal({
+        //     title: 'Add New Staff',
+        //     html: '<input class="form-control" placeholder="Name" id="newName" >' +
+        //     '<input class="form-control" placeholder="E-mail" type="email" id="newEmail" >' +
+        //     '<input class="form-control" placeholder="Mobile" type="tel" id="newMobile" >',
+        //     showCancelButton: true,
+        //     confirmButtonClass: 'btn btn-success',
+        //     cancelButtonClass: 'btn btn-danger',
+        //     buttonsStyling: false
+        // }).then(function (result: any) {
 
-            // update DB
+        //     var name = $('#newName').val();
+        //     var email = $('#newEmail').val();
+        //     var mobile = $('#newMobile').val();
+        //     console.log(name);
+        //     console.log(email);
+        //     console.log(mobile);
+        //     const randomID = "104";
 
-        });
+        //     var newStaffInfo = {
+        //         "id": randomID,
+        //         "img": "../../assets/img/placeholder.jpg",
+        //         "name": name,
+        //         "phone": "",
+        //         "mobile": mobile,
+        //         "email": email,
+        //         "address": "",
+        //         "city": "",
+        //         "country": "",
+        //         "description": ""
+
+        //     }; 
+
+        //     self.staffList.push(newStaffInfo);
+
+        //     // update DB
+
+        // });
     }
 
     displayStaff(event, id){
